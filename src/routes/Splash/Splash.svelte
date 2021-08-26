@@ -1,11 +1,12 @@
 <script lang="ts">
   import { useNavigate } from 'svelte-navigator';
-  import {PrimaryButton} from 'components';
+  import { PrimaryButton } from 'components';
+  import { initWallet } from 'src/store';
   import './splash.scss';
 
   const navigate = useNavigate();
-  const connect = () => {
-    console.log('Hello World');
+  const connect = async () => {
+    await initWallet();
   };
 </script>
 
