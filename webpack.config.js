@@ -13,8 +13,8 @@ module.exports = {
     resolve: {
         alias: {
             svelte: path.dirname(require.resolve('svelte/package.json')),
-            // components: path.resolve(__dirname, 'src/components'),
-            // routes: path.resolve(__dirname, 'src/routes'),
+            components: path.resolve(__dirname, 'src/components'),
+            routes: path.resolve(__dirname, 'src/routes'),
             // enums: path.resolve(__dirname, 'src/enums'),
             process: 'process/browser',
             src: path.resolve(__dirname, 'src/'),
