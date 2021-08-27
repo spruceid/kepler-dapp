@@ -97,9 +97,18 @@ export const initWallet: () => Promise<void> = async () => {
         console.debug('Wallet initialized');
         console.debug('Kepler initialized');
 
-        const orbitId = await fetchOrbitId();
-        const res = await kepler.put(orbitId, 'some string');
-        console.debug(res);
+        let orbitId = await fetchOrbitId();
+
+        // const saveResponse = await addToKepler(orbitId, { message: 'just a message' });
+        // console.debug(saveResponse);
+
+        const listResponse = await localKepler.list(orbitId);
+        const uris = await listResponse.json() as Array<string>;
+        uris.forEach(async (uri) => {
+            const res = await localKepler.resolve(uri);
+            const json = await res.json();
+            console.log(json);
+        })
     } catch (e) {
         wallet.set(null);
         console.error(e);
