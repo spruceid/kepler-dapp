@@ -24,6 +24,8 @@ wallet.subscribe((x) => {
     localWallet = x;
 });
 
+export const uris: Writable<Array<string>> = writable([]);
+
 let localKepler: Kepler;
 
 // Kepler interactions
@@ -103,12 +105,12 @@ export const initWallet: () => Promise<void> = async () => {
         // console.debug(saveResponse);
 
         const listResponse = await localKepler.list(orbitId);
-        const uris = await listResponse.json() as Array<string>;
-        uris.forEach(async (uri) => {
-            const res = await localKepler.resolve(uri);
-            const json = await res.json();
-            console.log(json);
-        })
+        uris.set(await listResponse.json() as Array<string>);
+
+
+        // const responses = await Promise.all(uris.map((uri) => localKepler.resolve(uri)));
+        // const jsons = await Promise.all(responses.map((response) => response.json()));
+        // console.log(jsons);
     } catch (e) {
         wallet.set(null);
         console.error(e);
