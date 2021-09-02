@@ -1,13 +1,36 @@
 <script lang="ts">
   import { useNavigate } from 'svelte-navigator';
   import { PrimaryButton } from 'components';
-  import { initWallet, uris } from 'src/store';
+  import {
+    initWallet,
+    uris,
+    wallet,
+    uploadToKepler,
+    fetchAllUris,
+  } from 'src/store';
   import './splash.scss';
+  import { onMount } from 'svelte';
 
   const navigate = useNavigate();
   const connect = async () => {
     await initWallet();
   };
+
+  let files;
+
+  const upload = async () => {
+    const formData = new FormData();
+    formData.append('file', files[0]);
+    try {
+      await uploadToKepler(formData);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  onMount(async () => {
+    await fetchAllUris();
+  });
 </script>
 
 <div class="flex items-center justify-center h-screen">
@@ -22,10 +45,15 @@
 
             <div class="flex flex-row items-center">
               <div class="mr-4">
-                <PrimaryButton
-                  onClick={() => connect()}
-                  text="Connect Wallet"
-                />
+                {#if $wallet}
+                  <input type="file" bind:files />
+                  <PrimaryButton onClick={() => upload()} text="Upload" />
+                {:else}
+                  <PrimaryButton
+                    onClick={() => connect()}
+                    text="Connect Wallet"
+                  />
+                {/if}
               </div>
             </div>
           </div>
