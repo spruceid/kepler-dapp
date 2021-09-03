@@ -22,15 +22,54 @@
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
+    @apply dark:text-white;
   }
 
   h1,
   h2,
   h3,
   h4,
+  h5,
+  h6 {
+    @apply font-extrabold;
+    @apply dark:text-white;
+    @apply font-satoshi;
+  }
+
+  h1 {
+    font-size: 84px;
+    line-height: 129px;
+    letter-spacing: -4.5%;
+  }
+
+  h2 {
+    font-size: 66px;
+    line-height: 101px;
+    letter-spacing: -3%;
+  }
+
+  h3 {
+    font-size: 52px;
+    line-height: 80px;
+    letter-spacing: -1.5%;
+  }
+
+  h4 {
+    font-size: 48px;
+    line-height: 63px;
+    letter-spacing: -1%;
+  }
+
   h5 {
-    font-weight: 600;
-    color: #222222;
+    font-size: 32px;
+    line-height: 49px;
+    letter-spacing: -0.5%;
+  }
+
+  h6 {
+    font-size: 24px;
+    line-height: 37px;
+    letter-spacing: -0.5%;
   }
 
   body {
@@ -77,11 +116,14 @@
 
 <script lang="ts">
   import { Router, Route } from 'svelte-navigator';
-  import { Splash } from './routes';
+  import { Splash, Home } from './routes';
 </script>
 
 <Router>
   <Route path="/">
     <Splash />
+  </Route>
+  <Route path="/app">
+    <Home />
   </Route>
 </Router>

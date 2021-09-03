@@ -15,22 +15,20 @@ module.exports = {
             svelte: path.dirname(require.resolve('svelte/package.json')),
             components: path.resolve(__dirname, 'src/components'),
             routes: path.resolve(__dirname, 'src/routes'),
-            // enums: path.resolve(__dirname, 'src/enums'),
-            process: 'process/browser',
             src: path.resolve(__dirname, 'src/'),
         },
         extensions: ['.mjs', '.js', '.ts', '.svelte'],
         mainFields: ['svelte', 'browser', 'module', 'main'],
         fallback: {
-            // buffer: require.resolve('buffer'),
+            buffer: require.resolve('buffer'),
             crypto: require.resolve('crypto-browserify'),
-            // events: require.resolve('events/'),
+            events: require.resolve('events/'),
             http: require.resolve('stream-http'),
             https: require.resolve('https-browserify'),
             os: require.resolve('os-browserify'),
             path: require.resolve('path-browserify'),
             stream: require.resolve('stream-browserify'),
-            // url: require.resolve('url/'),
+            url: require.resolve('url/'),
         },
     },
     output: {
@@ -87,9 +85,7 @@ module.exports = {
     plugins: [
         new webpack.ProvidePlugin({
             Buffer: ['buffer', 'Buffer'],
-        }),
-        new webpack.ProvidePlugin({
-            process: 'process/browser',
+            'process/browser': 'process/browser',
         }),
         new MiniCssExtractPlugin({
             filename: '[name].css',

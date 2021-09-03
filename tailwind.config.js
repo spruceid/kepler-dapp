@@ -5,15 +5,18 @@ module.exports = {
     './src/**/*.js',
     './src/**/*.svelte',
   ],
-  darkMode: false,
+  darkMode: 'class',
   theme: {
     extend: {
       lineHeight: {
         16: '4rem'
       },
       colors: {
-        green: {
-          550: '#429383'
+        purple: {
+          DEFAULT: '#3528B0'
+        },
+        cyan: {
+          DEFAULT: '#00D3DD'
         },
         blue: {
           350: '#1DA1F2',
@@ -22,7 +25,8 @@ module.exports = {
         gray: {
           350: '#AAAAAA',
           370: '#A0A4A8',
-          650: '#3E3E3E'
+          650: '#3E3E3E',
+          DEFAULT: '#212121'
         },
       },
       maxWidth: {
@@ -46,13 +50,10 @@ module.exports = {
         'fit-content': 'fit-content',
         '15': '3.75rem'
       },
-      outline: {
-        green: ['2px solid #429383', '-6px'],
-      },
       fontFamily: {
         'poppins': ['Poppins'],
+        'satoshi': ['Satoshi'],
         'inter': ['Inter'],
-        'monserrat': ['Montserrat'],
       },
     },
   },
