@@ -28,10 +28,10 @@
 
   <div class="flex flex-col items-center">
     <div class="mr-4 flex flex-col">
-      {#if $walletData}
+      <!-- {#if $walletData} -->
         <input type="file" bind:files />
         <Button onClick={() => upload()} text="Upload" />
-      {/if}
+      <!-- {/if} -->
     </div>
 
     <div class="flex-col flex-wrap items-center justify-center">
