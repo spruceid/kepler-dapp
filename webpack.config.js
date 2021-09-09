@@ -94,9 +94,8 @@ module.exports = {
             BUILD_MODE_DEV: !prod,
         }),
         new webpack.EnvironmentPlugin({
-            // WITNESS_URL: 'https://tzprofiles_witness.rebase-verifier.workers.dev',
             KEPLER_URL: 'http://localhost:8000',
-            // EXPLAINER_URL: 'https://explainer.tzprofiles.com',
+            ALLOW_LIST_URL: 'http://localhost:10000'
         }),
     ],
     devtool: prod ? false : 'source-map',

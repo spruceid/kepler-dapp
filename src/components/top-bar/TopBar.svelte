@@ -1,6 +1,6 @@
 <script>
   import { Button } from 'components';
-  import { wallet, initWallet, walletData } from 'src/store';
+  import { initWallet, walletData } from 'src/store';
 
   const connect = async () => {
     await initWallet();
