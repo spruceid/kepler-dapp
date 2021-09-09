@@ -7,7 +7,7 @@ import {
   BlockExplorer,
   ConnectionContext,
 } from '@airgap/beacon-sdk';
-import { readable, writable } from 'svelte/store';
+import { get, readable, writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
 import { Kepler, startSession, didVmToParams } from 'kepler-sdk';
 import * as helpers from 'src/helpers/index';
@@ -37,13 +37,7 @@ const sessionKey = writable<Capabilities>(null);
 const sessionKeyDurationInMs = 60 * 1000;
 
 export const wallet = writable<BeaconWallet>(null);
-let localWallet: BeaconWallet;
-wallet.subscribe(w => localWallet = w);
-
 export const kepler = writable<Kepler>(null);
-let localKepler: Kepler;
-kepler.subscribe(k => localKepler = k);
-
 export const uris: Writable<Array<string>> = writable([]);
 
 // Kepler interactions
@@ -51,6 +45,9 @@ const addToKepler = async (
   orbit: string,
   ...obj: Array<any>
 ): Promise<Array<string>> => {
+  const localWallet = get(wallet);
+  const localKepler = get(kepler);
+
   try {
     let addresses = await helpers.addToKepler(
       localKepler,
@@ -112,6 +109,8 @@ export const initWallet = async (): Promise<void> => {
 };
 
 const initKepler = async (): Promise<void> => {
+  const localWallet = get(wallet);
+
   controller = await tz(localWallet.client as any, didkit);
 
   const params = didVmToParams(controller.id(), { index: "0" });
@@ -142,28 +141,18 @@ const initKepler = async (): Promise<void> => {
 };
 
 export const fetchAllUris = async () => {
+  const localKepler = get(kepler);
+
   const listResponse = await localKepler.list(oid);
   if (listResponse.status == 200) {
     console.log(listResponse);
 
     const localUris = (await listResponse.json()) as Array<string>;
-    uris.set(localUris.map(uri => uri.split('/').slice(-1)[0]));
-
-    // const responses = await Promise.all(
-    //   localUris.map((uri) => kepler.resolve(uri))
-    // );
-    // const jsons = await Promise.all(
-    //   responses.map((response) => response.json())
-    // );
-    // console.log(jsons);
+    uris.set(localUris);
   }
 };
 
 export const uploadToKepler = async (files: any) => {
-  if (!kepler) {
-    return;
-  }
-
   const saveResponse = await addToKepler(oid, { date: new Date() });
   console.debug(saveResponse);
 
