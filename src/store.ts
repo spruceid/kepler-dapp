@@ -7,7 +7,7 @@ import {
   BlockExplorer,
   ConnectionContext,
 } from '@airgap/beacon-sdk';
-import { get, readable, writable } from 'svelte/store';
+import { derived, get, readable, writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
 import { Kepler, startSession, didVmToParams } from 'kepler-sdk';
 import * as helpers from 'src/helpers/index';
@@ -33,12 +33,56 @@ const allowListUrl = process.env.ALLOW_LIST_URL;
 let oid: string;
 let controller: Capabilities;
 
-const sessionKey = writable<Capabilities>(null);
-const sessionKeyDurationInMs = 60 * 1000;
+// Store that always contains the current time.
+const currentTime = readable(new Date(), (set) => {
+  const interval = setInterval(() => {
+    set(new Date())
+  }, 1000);
+
+  return () => {
+    clearInterval(interval);
+  }
+});
+
+export const walletData: Writable<{
+  account: AccountInfo;
+  output: PermissionResponseOutput;
+  blockExplorer: BlockExplorer;
+  connectionContext: ConnectionContext;
+  walletInfo: WalletInfo;
+}> = writable(null);
 
 export const wallet = writable<BeaconWallet>(null);
+wallet.subscribe((w) => {
+  if (!w) {
+    return;
+  }
+
+  w.client.subscribeToEvent(
+    BeaconEvent.PERMISSION_REQUEST_SUCCESS,
+    async (data) => {
+      walletData.set(data);
+    }
+  );
+});
+
 export const kepler = writable<Kepler>(null);
 export const uris: Writable<Array<string>> = writable([]);
+
+const sessionKey = writable<Capabilities>(null);
+const sessionKeyGeneratedAt = derived(kepler, $kepler => $kepler ? new Date() : null);
+
+const sessionKeyDurationInMs = 60 * 1000;
+
+export const remainingSessionKeysTime = derived([currentTime, sessionKeyGeneratedAt], stores => {
+  const [currentTime, sessionKeyGeneratedAt] = stores;
+
+  if (!currentTime || !sessionKeyGeneratedAt) {
+    return null;
+  }
+
+  return currentTime.getSeconds() - sessionKeyGeneratedAt.getSeconds();
+});
 
 // Kepler interactions
 const addToKepler = async (
@@ -61,45 +105,6 @@ const addToKepler = async (
     });
     return addresses;
   } catch (e) {
-    alert.set({
-      message: e.message || JSON.stringify(e),
-      variant: 'error',
-    });
-    throw e;
-  }
-};
-
-export const walletData: Writable<{
-  account: AccountInfo;
-  output: PermissionResponseOutput;
-  blockExplorer: BlockExplorer;
-  connectionContext: ConnectionContext;
-  walletInfo: WalletInfo;
-}> = writable(null);
-
-export const initWallet = async (): Promise<void> => {
-  const options = {
-    name: 'Kepler',
-    iconUrl: 'https://tezostaquito.io/img/favicon.png',
-    preferredNetwork: NetworkType.FLORENCENET,
-  };
-
-  const requestPermissionsInput = {
-    network: {
-      type: NetworkType.FLORENCENET,
-      rpcUrl: `https://${NetworkType.FLORENCENET}.smartpy.io/`,
-      name: NetworkType.FLORENCENET,
-    },
-  };
-
-  const newWallet = new BeaconWallet(options);
-
-  try {
-    wallet.set(newWallet)
-    await newWallet.requestPermissions(requestPermissionsInput);
-    await initKepler();
-  } catch (e) {
-    wallet.set(null);
     alert.set({
       message: e.message || JSON.stringify(e),
       variant: 'error',
@@ -138,6 +143,37 @@ const initKepler = async (): Promise<void> => {
   );
 
   kepler.set(newKepler);
+};
+
+export const initWallet = async (): Promise<void> => {
+  const options = {
+    name: 'Kepler',
+    iconUrl: 'https://tezostaquito.io/img/favicon.png',
+    preferredNetwork: NetworkType.FLORENCENET,
+  };
+
+  const requestPermissionsInput = {
+    network: {
+      type: NetworkType.FLORENCENET,
+      rpcUrl: `https://${NetworkType.FLORENCENET}.smartpy.io/`,
+      name: NetworkType.FLORENCENET,
+    },
+  };
+
+  const newWallet = new BeaconWallet(options);
+
+  try {
+    wallet.set(newWallet)
+    await newWallet.requestPermissions(requestPermissionsInput);
+    await initKepler();
+  } catch (e) {
+    wallet.set(null);
+    alert.set({
+      message: e.message || JSON.stringify(e),
+      variant: 'error',
+    });
+    throw e;
+  }
 };
 
 export const fetchAllUris = async () => {

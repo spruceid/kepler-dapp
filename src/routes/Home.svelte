@@ -15,10 +15,6 @@
       console.error(e);
     }
   };
-
-  onMount(async () => {
-    await fetchAllUris();
-  });
 </script>
 
 <BasePage>
