@@ -55,7 +55,11 @@
 
 <BasePage>
   <div class="p-16">
-    <div class="text-2xl font-bold body mb-6">My Storage</div>
+    <div class="flex flex-row">
+      <div class="text-2xl font-bold body mb-6 mr-4">My Storage</div>
+      <Button onClick={fetchAllUris} text="Reload" class="mr-4" />
+      <Button onClick={upload} text="Upload" />
+    </div>
 
     <Table elements={$files} columns={tableColumns} />
   </div>
