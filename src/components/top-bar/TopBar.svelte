@@ -7,7 +7,7 @@
   };
 </script>
 
-<div class="p-9 flex w-full items-center justify-end">
+<div class="py-9 px-16 flex w-full items-center justify-end border-b border-gray-650">
   {#if $remainingSessionKeysTime}
     <span class="flex flex-grow">{$remainingSessionKeysTime}</span>
   {/if}

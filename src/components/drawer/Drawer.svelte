@@ -11,7 +11,7 @@
   const handleCaptchaResult = (result) => {};
 </script>
 
-<div class="flex flex-col py-10 items-center lg:w-64 border-r border-gray-650">
+<div class="flex flex-col py-9 items-center lg:w-64 border-r border-gray-650">
   <FullLogo class="px-10 w-64" />
   <Button
     class="mx-10 mt-10"
