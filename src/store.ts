@@ -27,14 +27,14 @@ export const alert: Writable<{
   variant: 'error' | 'warning' | 'success' | 'info';
 }>(null);
 
-export interface File {
+export type FileListEntry = {
   name: string;
   size: number;
   type: string;
   createdAt: Date;
   cid: string;
   status: 'pinned'
-}
+};
 
 const keplerUrl = process.env.KEPLER_URL;
 const allowListUrl = process.env.ALLOW_LIST_URL;
@@ -76,7 +76,7 @@ wallet.subscribe((w) => {
 });
 
 export const kepler = writable<Kepler>(null);
-export const files: Writable<Array<File>> = writable([
+export const files: Writable<Array<FileListEntry>> = writable([
   { name: "Dummy name", size: Math.floor((Math.random() * 100000000000) + 1000), createdAt: new Date(), type: 'json', cid: "zb38SJLBykPHHkSpnp3mx43K5qdYHDTGFd34UyjAMJ2eaZSqo", status: 'pinned' },
   { name: "Dummy name", size: Math.floor((Math.random() * 100000000000) + 1000), createdAt: new Date(), type: 'json', cid: "zb38SGeg5etSRWFuvNNEhYt3GrBihqiYGLvGwZ5nA9CvTmipS", status: 'pinned' },
   { name: "Dummy name", size: Math.floor((Math.random() * 100000000000) + 1000), createdAt: new Date(), type: 'json', cid: "zb38SNctyN1Qo6TPPTmgHXFdXg18vE9ToUV2wzLkSrHo1dxZ6", status: 'pinned' },
