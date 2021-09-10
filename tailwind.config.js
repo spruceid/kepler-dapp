@@ -62,6 +62,7 @@ module.exports = {
       backgroundColor: ['checked'],
       borderColor: ['checked'],
       opacity: ['disabled'],
+      tableLayout: ['hover', 'focus'],
     }
   },
   plugins: [],

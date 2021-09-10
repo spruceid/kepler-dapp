@@ -27,6 +27,15 @@ export const alert: Writable<{
   variant: 'error' | 'warning' | 'success' | 'info';
 }>(null);
 
+export interface File {
+  name: string;
+  size: number;
+  type: string;
+  createdAt: Date;
+  cid: string;
+  status: 'pinned'
+}
+
 const keplerUrl = process.env.KEPLER_URL;
 const allowListUrl = process.env.ALLOW_LIST_URL;
 
@@ -67,7 +76,13 @@ wallet.subscribe((w) => {
 });
 
 export const kepler = writable<Kepler>(null);
-export const uris: Writable<Array<string>> = writable([]);
+export const files: Writable<Array<File>> = writable([
+  { name: "Dummy name", size: Math.floor((Math.random() * 100000000000) + 1000), createdAt: new Date(), type: 'json', cid: "zb38SJLBykPHHkSpnp3mx43K5qdYHDTGFd34UyjAMJ2eaZSqo", status: 'pinned' },
+  { name: "Dummy name", size: Math.floor((Math.random() * 100000000000) + 1000), createdAt: new Date(), type: 'json', cid: "zb38SGeg5etSRWFuvNNEhYt3GrBihqiYGLvGwZ5nA9CvTmipS", status: 'pinned' },
+  { name: "Dummy name", size: Math.floor((Math.random() * 100000000000) + 1000), createdAt: new Date(), type: 'json', cid: "zb38SNctyN1Qo6TPPTmgHXFdXg18vE9ToUV2wzLkSrHo1dxZ6", status: 'pinned' },
+  { name: "Dummy name", size: Math.floor((Math.random() * 100000000000) + 1000), createdAt: new Date(), type: 'json', cid: "zb38SKLX7dZYGqpAXZQk6ESAXYrdVLwPEXvGwrnfXzA1X6c4x", status: 'pinned' },
+  { name: "Dummy name", size: Math.floor((Math.random() * 100000000000) + 1000), createdAt: new Date(), type: 'json', cid: "zb38S73vSz8G3uVGRJN4aZTxBzZhNqNoWrm8eYaDwvKcNtwrD", status: 'pinned' },
+]);
 
 const sessionKey = writable<Capabilities>(null);
 const sessionKeyGeneratedAt = derived(kepler, $kepler => $kepler ? new Date() : null);
@@ -92,6 +107,8 @@ const addToKepler = async (
   const localWallet = get(wallet);
   const localKepler = get(kepler);
 
+  if (!localWallet || !localKepler) { return; }
+
   try {
     let addresses = await helpers.addToKepler(
       localKepler,
@@ -115,6 +132,8 @@ const addToKepler = async (
 
 const initKepler = async (): Promise<void> => {
   const localWallet = get(wallet);
+
+  if (!localWallet) { return; }
 
   controller = await tz(localWallet.client as any, didkit);
 
@@ -179,12 +198,21 @@ export const initWallet = async (): Promise<void> => {
 export const fetchAllUris = async () => {
   const localKepler = get(kepler);
 
+  if (!localKepler) { return; }
+
   const listResponse = await localKepler.list(oid);
   if (listResponse.status == 200) {
-    console.log(listResponse);
-
-    const localUris = (await listResponse.json()) as Array<string>;
-    uris.set(localUris);
+    const uris = (await listResponse.json()) as Array<string>;
+    files.set(uris.map((uri) => {
+      return {
+        name: "Dummy name",
+        size: Math.floor((Math.random() * 100000000000) + 1000),
+        createdAt: new Date(),
+        type: 'json',
+        cid: uri.split('/').slice(-1)[0],
+        status: 'pinned'
+      }
+    }));
   }
 };
 
