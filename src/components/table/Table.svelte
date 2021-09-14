@@ -16,13 +16,7 @@
   /**
    * Wheter the list content should expand itself
    */
-  export let fluid: boolean;
-
-  /**
-   * Wheter the list content should be scrollable
-   * defaults to true
-   */
-  export let scrollable: boolean;
+  export let fluid: boolean = true;
 
   /**
    * Helper tailwind classes
@@ -30,6 +24,8 @@
    */
   let clazz: string;
   export { clazz as class };
+
+  export let onRowClick: (element, index: number) => void;
 
   let headers = columns.map((column) => column.header);
 </script>
@@ -58,7 +54,11 @@
       {/if}
       <tbody>
         {#each elements as object, rowIndex}
-          <tr class="text-sm border-b border-gray-650">
+          <tr
+            class="text-sm border-b border-gray-650"
+            class:hover:cursor-pointer={onRowClick != null}
+            on:click={() => onRowClick(object, rowIndex)}
+          >
             {#each columns as column}
               <td class="py-5 px-3">
                 {#if column.component != null}
