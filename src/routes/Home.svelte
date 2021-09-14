@@ -5,17 +5,20 @@
   import { onMount } from 'svelte';
   import { formatBytes } from 'src/helpers';
   import { TableColumn } from 'src/types';
+  import { fly } from 'svelte/transition';
 
   const navigate = useNavigate();
 
   let filesToUpload;
+  let show: boolean;
 
   const upload = async () => {
-    try {
-      await uploadToKepler(filesToUpload);
-    } catch (e) {
-      console.error(e);
-    }
+    show = !show;
+    // try {
+    //   await uploadToKepler(filesToUpload);
+    // } catch (e) {
+    //   console.error(e);
+    // }
   };
 
   const tableColumns: Array<TableColumn> = [
@@ -55,18 +58,20 @@
 
 <BasePage>
   <div class="relative z-0">
-  <div class="p-16">
-    <div class="flex flex-row">
-      <div class="text-2xl font-bold body mb-6 mr-4">My Storage</div>
-      <Button onClick={fetchAllUris} text="Reload" class="mr-4" />
-      <Button onClick={upload} text="Upload" />
+    <div class="p-16">
+      <div class="flex flex-row">
+        <div class="text-2xl font-bold body mb-6 mr-4">My Storage</div>
+        <Button onClick={fetchAllUris} text="Reload" class="mr-4" />
+        <Button onClick={upload} text="Upload" />
+      </div>
+
+      <Table elements={$files} columns={tableColumns} />
     </div>
 
-    <Table elements={$files} columns={tableColumns} />
-  </div>
-
-  <div class="absolute right-0 top-0">
-      <FileInfo />
-    </div>
+    {#if show}
+      <div transition:fly={{ x: 384 }} class="absolute right-0 top-0">
+        <FileInfo />
+      </div>
+    {/if}
   </div>
 </BasePage>
