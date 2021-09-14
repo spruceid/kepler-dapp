@@ -1,6 +1,6 @@
 <script lang="ts">
   import { useNavigate } from 'svelte-navigator';
-  import { Button, BasePage, Table } from 'components';
+  import { Button, BasePage, Table, FileInfo } from 'components';
   import { files, walletData, uploadToKepler, fetchAllUris } from 'src/store';
   import { onMount } from 'svelte';
   import { formatBytes } from 'src/helpers';
@@ -54,6 +54,7 @@
 </script>
 
 <BasePage>
+  <div class="relative z-0">
   <div class="p-16">
     <div class="flex flex-row">
       <div class="text-2xl font-bold body mb-6 mr-4">My Storage</div>
@@ -62,5 +63,10 @@
     </div>
 
     <Table elements={$files} columns={tableColumns} />
+  </div>
+
+  <div class="absolute right-0 top-0">
+      <FileInfo />
+    </div>
   </div>
 </BasePage>

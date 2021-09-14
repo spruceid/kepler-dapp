@@ -25,12 +25,6 @@
   export let scrollable: boolean;
 
   /**
-   * If the component shadow should be disabled,
-   * defaults to false
-   */
-  export let noShadow: boolean;
-
-  /**
    * Helper tailwind classes
    * https://tailwindcss.com/docs
    */
@@ -41,12 +35,7 @@
 </script>
 
 {#if elements.length > 0}
-  <div
-    class="flex min-w-full {!fluid
-      ? 'h-4/5 overflow-y-auto'
-      : ''} {clazz}"
-    class:shadow-lg={!noShadow}
-  >
+  <div class="flex min-w-full {!fluid ? 'h-4/5 overflow-y-auto' : ''} {clazz}">
     <table class="border-collapse min-w-full">
       {#if headers != null && headers.length > 0}
         <thead>

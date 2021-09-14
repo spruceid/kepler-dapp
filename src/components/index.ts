@@ -5,3 +5,4 @@ export * from './icons/';
 export * from './drawer/';
 export * from './top-bar/';
 export * from './table/';
+export * from './file-info/';

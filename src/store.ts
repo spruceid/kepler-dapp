@@ -12,10 +12,7 @@ import type { Writable } from 'svelte/store';
 import { Kepler, startSession, didVmToParams } from 'kepler-sdk';
 import * as helpers from 'src/helpers/index';
 import { WalletInfo } from '@airgap/beacon-sdk/dist/cjs/events';
-import { Capabilities } from '../../kepler-sdk/node_modules/@spruceid/zcap-providers/dist';
-import { tz } from '../../kepler-sdk/node_modules/@spruceid/zcap-providers/dist';
-import { didkey } from '../../kepler-sdk/node_modules/@spruceid/zcap-providers/dist';
-import { genJWK } from '../../kepler-sdk/node_modules/@spruceid/zcap-providers/dist';
+import { Capabilities, tz, didkey, genJWK } from '@spruceid/zcap-providers';
 import * as didkit from '@spruceid/didkit-wasm';
 
 // The UI element for poping toast-like alerts
@@ -206,7 +203,7 @@ export const fetchAllUris = async () => {
     files.set(uris.map((uri) => {
       return {
         name: "Dummy name",
-        size: Math.floor((Math.random() * 100000000000) + 1000),
+        size: Math.floor((Math.random() * 10000000000) + 1000),
         createdAt: new Date(),
         type: 'json',
         cid: uri.split('/').slice(-1)[0],
