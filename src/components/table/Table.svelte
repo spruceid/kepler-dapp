@@ -55,8 +55,8 @@
       <tbody>
         {#each elements as object, rowIndex}
           <tr
-            class="text-sm border-b border-gray-650"
-            class:hover:cursor-pointer={onRowClick != null}
+            class="text-sm border-b border-gray-650 hover:bg-blue-800 hover:bg-opacity-10"
+            class:cursor-pointer={onRowClick != null}
             on:click={() => onRowClick(object, rowIndex)}
           >
             {#each columns as column}
