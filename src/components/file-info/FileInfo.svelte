@@ -1,6 +1,7 @@
 <script lang="ts">
   import { FileListEntry } from 'src/store';
   import { fly } from 'svelte/transition';
+  import { quintOut } from 'svelte/easing';
   import { onMount } from 'svelte';
   import filesize from 'filesize';
 
@@ -50,7 +51,10 @@
 <svelte:window on:keyup={handleKeyUp} />
 
 {#if visible}
-  <div transition:fly={{ x: 384 }} class="absolute right-0 top-0 bottom-0 z-20 bg-gray-primary-03">
+  <div
+    transition:fly={{ easing: quintOut, x: 384, opacity: 1.0 }}
+    class="absolute right-0 top-0 bottom-0 z-20 bg-gray-primary-03"
+  >
     <div class="flex flex-grow flex-col p-10 w-96">
       <div class="flex flex-grow flex-row mb-10">
         <p class="font-bold text-lg">Dummy name</p>
