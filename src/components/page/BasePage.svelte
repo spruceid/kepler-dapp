@@ -1,11 +1,13 @@
-<script>
+<script lang="ts">
   import { Drawer, TopBar } from 'components';
 </script>
 
-<div class="flex flex-grow dark:bg-gray">
+<div class="flex w-full h-full dark:bg-gray overflow-hidden">
   <Drawer />
-  <div class="flex flex-grow flex-col">
+  <div class="flex flex-col  flex-grow">
     <TopBar />
-    <slot />
+    <div class="px-16 pt-16 flex flex-col overflow-y-auto">
+      <slot />
+    </div>
   </div>
 </div>

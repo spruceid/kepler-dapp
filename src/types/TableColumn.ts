@@ -49,5 +49,5 @@ export type TableColumn = {
    * column content, if none passed a simple
    * div with the content will be shown
    */
-  component?: SvelteComponent;
+  component?: typeof SvelteComponent;
 };

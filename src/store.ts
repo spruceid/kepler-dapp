@@ -30,7 +30,7 @@ export type FileListEntry = {
   type: string;
   createdAt: Date;
   cid: string;
-  status: 'pinned'
+  status: 'pinned';
 };
 
 const keplerUrl = process.env.KEPLER_URL;
@@ -42,12 +42,12 @@ let controller: Capabilities;
 // Store that always contains the current time.
 const currentTime = readable(new Date(), (set) => {
   const interval = setInterval(() => {
-    set(new Date())
+    set(new Date());
   }, 1000);
 
   return () => {
     clearInterval(interval);
-  }
+  };
 });
 
 export const walletData: Writable<{
@@ -73,28 +73,39 @@ wallet.subscribe((w) => {
 });
 
 export const kepler = writable<Kepler>(null);
-export const files: Writable<Array<FileListEntry>> = writable([
-  { name: "Dummy name", size: Math.floor((Math.random() * 100000000000) + 1000), createdAt: new Date(), type: 'json', cid: "zb38SJLBykPHHkSpnp3mx43K5qdYHDTGFd34UyjAMJ2eaZSqo", status: 'pinned' },
-  { name: "Dummy name", size: Math.floor((Math.random() * 100000000000) + 1000), createdAt: new Date(), type: 'json', cid: "zb38SGeg5etSRWFuvNNEhYt3GrBihqiYGLvGwZ5nA9CvTmipS", status: 'pinned' },
-  { name: "Dummy name", size: Math.floor((Math.random() * 100000000000) + 1000), createdAt: new Date(), type: 'json', cid: "zb38SNctyN1Qo6TPPTmgHXFdXg18vE9ToUV2wzLkSrHo1dxZ6", status: 'pinned' },
-  { name: "Dummy name", size: Math.floor((Math.random() * 100000000000) + 1000), createdAt: new Date(), type: 'json', cid: "zb38SKLX7dZYGqpAXZQk6ESAXYrdVLwPEXvGwrnfXzA1X6c4x", status: 'pinned' },
-  { name: "Dummy name", size: Math.floor((Math.random() * 100000000000) + 1000), createdAt: new Date(), type: 'json', cid: "zb38S73vSz8G3uVGRJN4aZTxBzZhNqNoWrm8eYaDwvKcNtwrD", status: 'pinned' },
-]);
+
+export const files: Writable<Array<FileListEntry>> = writable(
+  Array(60)
+    .fill(null)
+    .map(() => ({
+      name: (Math.random() + 1).toString(36).substring(2),
+      size: Math.floor(Math.random() * 10000000000),
+      createdAt: new Date(),
+      type: 'json',
+      cid: 'zb38SNctyN1Qo6TPPTmgHXFdXg18vE9ToUV2wzLkSrHo1dxZ6',
+      status: 'pinned',
+    }))
+);
 
 const sessionKey = writable<Capabilities>(null);
-const sessionKeyGeneratedAt = derived(kepler, $kepler => $kepler ? new Date() : null);
+const sessionKeyGeneratedAt = derived(kepler, ($kepler) =>
+  $kepler ? new Date() : null
+);
 
 const sessionKeyDurationInMs = 60 * 1000;
 
-export const remainingSessionKeysTime = derived([currentTime, sessionKeyGeneratedAt], stores => {
-  const [currentTime, sessionKeyGeneratedAt] = stores;
+export const remainingSessionKeysTime = derived(
+  [currentTime, sessionKeyGeneratedAt],
+  (stores) => {
+    const [currentTime, sessionKeyGeneratedAt] = stores;
 
-  if (!currentTime || !sessionKeyGeneratedAt) {
-    return null;
+    if (!currentTime || !sessionKeyGeneratedAt) {
+      return null;
+    }
+
+    return currentTime.getSeconds() - sessionKeyGeneratedAt.getSeconds();
   }
-
-  return currentTime.getSeconds() - sessionKeyGeneratedAt.getSeconds();
-});
+);
 
 // Kepler interactions
 const addToKepler = async (
@@ -104,7 +115,9 @@ const addToKepler = async (
   const localWallet = get(wallet);
   const localKepler = get(kepler);
 
-  if (!localWallet || !localKepler) { return; }
+  if (!localWallet || !localKepler) {
+    return;
+  }
 
   try {
     let addresses = await helpers.addToKepler(
@@ -130,24 +143,26 @@ const addToKepler = async (
 const initKepler = async (): Promise<void> => {
   const localWallet = get(wallet);
 
-  if (!localWallet) { return; }
+  if (!localWallet) {
+    return;
+  }
 
   controller = await tz(localWallet.client as any, didkit);
 
-  const params = didVmToParams(controller.id(), { index: "0" });
+  const params = didVmToParams(controller.id(), { index: '0' });
   oid = await fetch(`${allowListUrl}/${params}`, {
     method: 'PUT',
     body: JSON.stringify([controller.id()]),
     headers: {
       'Content-Type': 'application/json',
       'X-Hcaptcha-Sitekey': '10000000-ffff-ffff-ffff-000000000001',
-      'X-Hcaptcha-Token': '10000000-aaaa-bbbb-cccc-000000000001'
-    }
-  }).then(async res => res.text());
+      'X-Hcaptcha-Token': '10000000-aaaa-bbbb-cccc-000000000001',
+    },
+  }).then(async (res) => res.text());
 
   await fetch(`${keplerUrl}/al/${oid}`, {
     method: 'POST',
-    body: params
+    body: params,
   });
 
   const newSessionKey = await didkey(genJWK(didkit), didkit);
@@ -155,7 +170,13 @@ const initKepler = async (): Promise<void> => {
 
   const newKepler = new Kepler(
     keplerUrl,
-    await startSession(oid, controller, newSessionKey, ['put', 'del', 'get', 'list'], sessionKeyDurationInMs)
+    await startSession(
+      oid,
+      controller,
+      newSessionKey,
+      ['put', 'del', 'get', 'list'],
+      sessionKeyDurationInMs
+    )
   );
 
   kepler.set(newKepler);
@@ -179,7 +200,7 @@ export const initWallet = async (): Promise<void> => {
   const newWallet = new BeaconWallet(options);
 
   try {
-    wallet.set(newWallet)
+    wallet.set(newWallet);
     await newWallet.requestPermissions(requestPermissionsInput);
     await initKepler();
   } catch (e) {
@@ -195,21 +216,25 @@ export const initWallet = async (): Promise<void> => {
 export const fetchAllUris = async () => {
   const localKepler = get(kepler);
 
-  if (!localKepler) { return; }
+  if (!localKepler) {
+    return;
+  }
 
   const listResponse = await localKepler.list(oid);
   if (listResponse.status == 200) {
     const uris = (await listResponse.json()) as Array<string>;
-    files.set(uris.map((uri) => {
-      return {
-        name: "Dummy name",
-        size: Math.floor((Math.random() * 10000000000) + 1000),
-        createdAt: new Date(),
-        type: 'json',
-        cid: uri.split('/').slice(-1)[0],
-        status: 'pinned'
-      }
-    }));
+    files.set(
+      uris.map((uri) => {
+        return {
+          name: 'Dummy name',
+          size: Math.floor(Math.random() * 10000000000 + 1000),
+          createdAt: new Date(),
+          type: 'json',
+          cid: uri.split('/').slice(-1)[0],
+          status: 'pinned',
+        };
+      })
+    );
   }
 };
 

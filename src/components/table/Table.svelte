@@ -14,9 +14,9 @@
   export let elements: Array<any>;
 
   /**
-   * Wheter the list content should expand itself
+   * Wheter the list content should expand itself (not-scrollable)
    */
-  export let fluid: boolean = true;
+  export let fluid: boolean = false;
 
   /**
    * Helper tailwind classes
@@ -31,17 +31,17 @@
 </script>
 
 {#if elements.length > 0}
-  <div class="flex min-w-full {!fluid ? 'h-4/5 overflow-y-auto' : ''} {clazz}">
+  <div class="min-w-full {!fluid ? 'overflow-y-auto' : ''} {clazz}">
     <table class="border-collapse min-w-full">
       {#if headers != null && headers.length > 0}
-        <thead>
-          <tr class="border-b border-gray-650">
+        <thead class="sticky top-0 z-20">
+          <tr class="border-b border-gray-650 bg-gray">
             {#each headers as header}
               {#if header?.options?.override}
                 <th {...header.options}>{header.title}</th>
               {:else}
                 <th
-                  class={`text-gray-500 font-medium text-sm text-left px-3 py-6 ${
+                  class={`text-gray-500 font-medium text-sm text-left px-3 py-6 sticky top-0 z-20 ${
                     header?.options?.class ?? ''
                   }`}
                 >

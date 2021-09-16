@@ -14,7 +14,7 @@
   body {
     position: relative;
     width: 100vw;
-    min-height: 100vh;
+    height: 100vh;
     margin: 0px;
     padding: 0px;
     font-size: 16px;
