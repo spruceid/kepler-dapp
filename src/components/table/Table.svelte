@@ -14,21 +14,9 @@
   export let elements: Array<any>;
 
   /**
-   * Wheter the list content should expand itself
+   * Wheter the list content should expand itself (not-scrollable)
    */
-  export let fluid: boolean;
-
-  /**
-   * Wheter the list content should be scrollable
-   * defaults to true
-   */
-  export let scrollable: boolean;
-
-  /**
-   * If the component shadow should be disabled,
-   * defaults to false
-   */
-  export let noShadow: boolean;
+  export let fluid: boolean = false;
 
   /**
    * Helper tailwind classes
@@ -37,26 +25,23 @@
   let clazz: string;
   export { clazz as class };
 
+  export let onRowClick: (element, index: number) => void;
+
   let headers = columns.map((column) => column.header);
 </script>
 
 {#if elements.length > 0}
-  <div
-    class="flex min-w-full {!fluid
-      ? 'h-4/5 overflow-y-auto'
-      : ''} {clazz}"
-    class:shadow-lg={!noShadow}
-  >
+  <div class="min-w-full {!fluid ? 'overflow-y-auto' : ''} {clazz}">
     <table class="border-collapse min-w-full">
       {#if headers != null && headers.length > 0}
-        <thead>
-          <tr class="border-b border-gray-650">
+        <thead class="sticky top-0 z-20">
+          <tr class="border-b border-gray-650 bg-gray">
             {#each headers as header}
               {#if header?.options?.override}
                 <th {...header.options}>{header.title}</th>
               {:else}
                 <th
-                  class={`text-gray-500 font-medium text-sm text-left px-3 py-6 ${
+                  class={`text-gray-500 font-medium text-sm text-left px-3 py-6 sticky top-0 z-20 ${
                     header?.options?.class ?? ''
                   }`}
                 >
@@ -69,7 +54,11 @@
       {/if}
       <tbody>
         {#each elements as object, rowIndex}
-          <tr class="text-sm border-b border-gray-650">
+          <tr
+            class="text-sm border-b border-gray-650 hover:bg-purple hover:bg-opacity-10 transition-all ease-in-out duration-200"
+            class:cursor-pointer={onRowClick != null}
+            on:click={() => onRowClick(object, rowIndex)}
+          >
             {#each columns as column}
               <td class="py-5 px-3">
                 {#if column.component != null}

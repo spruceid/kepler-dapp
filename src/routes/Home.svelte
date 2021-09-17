@@ -1,10 +1,22 @@
 <script lang="ts">
   import { useNavigate } from 'svelte-navigator';
-  import { Button, BasePage, Table } from 'components';
-  import { files, walletData, uploadToKepler, fetchAllUris } from 'src/store';
-  import { onMount } from 'svelte';
-  import { formatBytes } from 'src/helpers';
-  import { TableColumn } from 'src/types';
+  import {
+    Button,
+    BasePage,
+    Table,
+    FileInfo,
+    IconButton,
+    RefreshIcon,
+    UploadIcon,
+  } from 'components';
+  import {
+    files,
+    uploadToKepler,
+    fetchAllUris,
+    FileListEntry,
+  } from 'src/store';
+  import type { TableColumn } from 'src/types';
+  import filesize from 'filesize';
 
   const navigate = useNavigate();
 
@@ -26,7 +38,7 @@
     {
       header: { title: 'Size' },
       path: 'size',
-      transform: (content: number, _) => formatBytes(content),
+      transform: (content: number, _) => filesize(content),
     },
     {
       header: { title: 'Type' },
@@ -51,16 +63,23 @@
       path: 'status',
     },
   ];
+
+  let toggleFileInfo: (file: FileListEntry) => void;
 </script>
 
 <BasePage>
-  <div class="p-16">
-    <div class="flex flex-row">
-      <div class="text-2xl font-bold body mb-6 mr-4">My Storage</div>
-      <Button onClick={fetchAllUris} text="Reload" class="mr-4" />
-      <Button onClick={upload} text="Upload" />
-    </div>
-
-    <Table elements={$files} columns={tableColumns} />
+  <div class="flex flex-row z-10 mb-6 items-center">
+    <div class="text-2xl font-bold body flex-grow">My Storage</div>
+    <IconButton icon={RefreshIcon} onClick={fetchAllUris} />
+    <IconButton icon={UploadIcon} onClick={upload} />
   </div>
+
+  <Table
+    elements={$files}
+    columns={tableColumns}
+    onRowClick={(element, _) => toggleFileInfo(element)}
+    class="z-10"
+  />
+
+  <FileInfo bind:toggle={toggleFileInfo} />
 </BasePage>

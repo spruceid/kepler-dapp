@@ -26,7 +26,8 @@ module.exports = {
           350: '#AAAAAA',
           370: '#A0A4A8',
           650: '#3E3E3E',
-          DEFAULT: '#212121'
+          DEFAULT: '#212121',
+          "primary-03": "#262626",
         },
       },
       maxWidth: {
