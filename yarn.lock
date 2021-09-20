@@ -129,8 +129,10 @@
   resolved "https://registry.yarnpkg.com/@spruceid/didkit-wasm/-/didkit-wasm-0.1.9.tgz#0e835f8461eee1e03dd270ed206b653a173aadd1"
   integrity sha512-VUP7bm7uWrAjSKzqAvgsAmueFLQ6MhaCN2INGxUmWhcZe9x87DeUneaeqJV2QuLsdPrwowmNcKnyZtJeNeWqIQ==
 
-"@spruceid/zcap-providers@../zcap-providers":
+"@spruceid/zcap-providers@^0.1.1":
   version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@spruceid/zcap-providers/-/zcap-providers-0.1.1.tgz#22e7d331595d4462aceb5742c7240507219c564b"
+  integrity sha512-PvIefM/BOAZLzddMyAt5MiPH7iSdxtfNS7mtbpr7lc5fyF3eJvDu6IVMbLWfBA4xtRxq76EAiB1uwg4isgj+fA==
   dependencies:
     uuid "^8.3.2"
 
@@ -5837,6 +5839,11 @@ v8-compile-cache@^2.0.3, v8-compile-cache@^2.2.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/v8-compile-cache/-/v8-compile-cache-2.3.0.tgz#2de19618c66dc247dcfb6f99338035d8245a2cee"
   integrity sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA==
+
+vanilla-hcaptcha@^1.0.0-alpha:
+  version "1.0.0-alpha"
+  resolved "https://registry.yarnpkg.com/vanilla-hcaptcha/-/vanilla-hcaptcha-1.0.0-alpha.tgz#e929320ffc935afd6110056d1fb8cab136a785b3"
+  integrity sha512-KG+g94vpZVBQq9NItoG02HyO2RJ0BWzh6Qu9e46Bb2P7dS/obGcAq4YKiFWcs8hTBH71OXl6gQOlAEOAr0LByw==
 
 varint@^5.0.2:
   version "5.0.2"

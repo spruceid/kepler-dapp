@@ -6,3 +6,4 @@ export * from './drawer/';
 export * from './top-bar/';
 export * from './table/';
 export * from './file-info/';
+export * from './allowlist-captcha/';

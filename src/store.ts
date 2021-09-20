@@ -140,7 +140,7 @@ const addToKepler = async (
   }
 };
 
-const initKepler = async (): Promise<void> => {
+export const createOrbit = async (captcha: string): Promise<void> => {
   const localWallet = get(wallet);
 
   if (!localWallet) {
@@ -156,7 +156,7 @@ const initKepler = async (): Promise<void> => {
     headers: {
       'Content-Type': 'application/json',
       'X-Hcaptcha-Sitekey': '10000000-ffff-ffff-ffff-000000000001',
-      'X-Hcaptcha-Token': '10000000-aaaa-bbbb-cccc-000000000001',
+      'X-Hcaptcha-Token': captcha,
     },
   }).then(async (res) => res.text());
 
@@ -164,6 +164,13 @@ const initKepler = async (): Promise<void> => {
     method: 'POST',
     body: params,
   });
+}
+
+const initKepler = async (): Promise<void> => {
+  if (!controller || !oid) {
+    console.log("need to setup an orbit first")
+    return;
+  }
 
   const newSessionKey = await didkey(genJWK(didkit), didkit);
   sessionKey.set(newSessionKey);

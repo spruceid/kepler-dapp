@@ -1,0 +1,1 @@
+export { default as AllowListCaptcha } from './AllowListCaptcha.svelte'

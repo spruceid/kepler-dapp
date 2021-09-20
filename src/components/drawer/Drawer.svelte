@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { Button, FullLogo } from 'components';
-  // import 'allowlist-hcaptcha-component';
+  import { Button, FullLogo, AllowListCaptcha } from 'components';
 
   let showCaptcha: boolean;
 
@@ -19,14 +18,8 @@
     text="Create new orbit"
     onClick={createNewOrbit}
   />
-<!-- 
+
   {#if showCaptcha}
-    <allowlist-captcha
-      allowlistapi="http://localhost:8000/"
-      controllers={['did:example:1', 'did:example:2']}
-      params="did;did=did:example:1"
-      sitekey="10000000-ffff-ffff-ffff-000000000001"
-      onResult={handleCaptchaResult}
-    />
-  {/if} -->
+    <AllowListCaptcha />
+  {/if}
 </div>
