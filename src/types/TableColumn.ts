@@ -6,9 +6,20 @@ export type TableColumn = {
    */
   header?: {
     /**
+     * Column ID
+     */
+    id: string;
+
+    /**
      * Text to be displayed in the header
      */
     title: string;
+
+    /**
+     * Whether the table can be sorted by this column
+     */
+    allowSorting?: boolean;
+
     /**
      * HTML attributes to be applied to the header
      */
@@ -24,6 +35,11 @@ export type TableColumn = {
       override?: boolean;
     };
   };
+
+  /**
+   * Optional custom comparator to use for sorting the elements
+   */
+  comparator?: (a: any, b: any) => number;
 
   /**
    * path to access the object value, if not found

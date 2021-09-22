@@ -32,20 +32,20 @@
 
   const tableColumns: Array<TableColumn> = [
     {
-      header: { title: 'Name' },
+      header: { title: 'Name', id: 'name' },
       path: 'name',
     },
     {
-      header: { title: 'Size' },
+      header: { title: 'Size', id: 'size' },
       path: 'size',
       transform: (content: number, _) => filesize(content),
     },
     {
-      header: { title: 'Type' },
+      header: { title: 'Type', id: 'type', allowSorting: false },
       path: 'type',
     },
     {
-      header: { title: 'Created' },
+      header: { title: 'Created', id: 'created' },
       path: 'createdAt',
       transform: (content: Date, _) =>
         content.toLocaleString(undefined, {
@@ -55,11 +55,11 @@
         }),
     },
     {
-      header: { title: 'IPFS CID' },
+      header: { title: 'IPFS CID', id: 'cid' },
       path: 'cid',
     },
     {
-      header: { title: 'Status' },
+      header: { title: 'Status', id: 'status' },
       path: 'status',
     },
   ];
@@ -68,8 +68,8 @@
 </script>
 
 <BasePage>
-  <div class="flex flex-row z-10 mb-6 items-center">
-    <div class="text-2xl font-bold body flex-grow">My Storage</div>
+  <div class="z-10 flex flex-row items-center mb-6">
+    <div class="flex-grow text-2xl font-bold body">My Storage</div>
     <IconButton icon={RefreshIcon} onClick={fetchAllUris} />
     <IconButton icon={UploadIcon} onClick={upload} />
   </div>
