@@ -81,7 +81,8 @@ export const files: Writable<Array<FileListEntry>> = writable(
       name: (Math.random() + 1).toString(36).substring(2),
       size: Math.floor(Math.random() * 10000000000),
       createdAt: new Date(),
-      type: 'json',
+      type:
+        Math.random() > 0.66 ? 'json' : Math.random() > 0.5 ? 'jpeg' : 'mp4',
       cid: 'zb38SNctyN1Qo6TPPTmgHXFdXg18vE9ToUV2wzLkSrHo1dxZ6',
       status: 'pinned',
     }))
@@ -164,11 +165,11 @@ export const createOrbit = async (captcha: string): Promise<void> => {
     method: 'POST',
     body: params,
   });
-}
+};
 
 const initKepler = async (): Promise<void> => {
   if (!controller || !oid) {
-    console.log("need to setup an orbit first")
+    console.log('need to setup an orbit first');
     return;
   }
 

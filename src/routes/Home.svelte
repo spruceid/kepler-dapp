@@ -103,13 +103,43 @@
     searchString = event.target.value;
   };
 
-  $: filteredFiles =
-    searchString !== ''
-      ? sortBy(searchInstance.search(searchString), 'score').map((e) => e.item)
-      : get(files);
-
   onDestroy(() => {
     unsubscribeFiles();
+  });
+
+  let filterSection: boolean = false;
+  $: filtersAvailable = [...new Set(get(files).map((f) => f.type))];
+  let filterType = [];
+
+  const toggleFilterSection = () => {
+    filterSection = !filterSection;
+  };
+
+  const allFilters = (
+    files,
+    { search: { instance, query }, filter: { type } }
+  ) => {
+    let ret = files;
+
+    if (query !== '') {
+      ret = sortBy(instance.search(query), 'score').map((e) => e.item);
+    }
+
+    if (type.length > 0) {
+      ret = ret.filter((f) => type.includes(f.type));
+    }
+
+    return ret;
+  };
+
+  $: filteredFiles = allFilters(get(files), {
+    search: {
+      instance: searchInstance,
+      query: searchString,
+    },
+    filter: {
+      type: filterType,
+    },
   });
 </script>
 
@@ -120,7 +150,8 @@
     <IconButton icon={UploadIcon} onClick={upload} />
   </div>
 
-  <div class="flex flex-row items-center justify-end mx-4 mb-6">
+  <div class="flex flex-row items-center justify-between mb-6">
+    <IconButton mini icon={FilterIcon} onClick={toggleFilterSection} />
     <TextField
       icon={SearchIcon}
       name="search"
@@ -128,6 +159,28 @@
       onInput={onSearchInput}
     />
   </div>
+
+  {#if filterSection}
+    <div class="px-4 py-2 mb-6 border-2 border-gray-800 rounded-md">
+      <div class="text-lg text-gray-400">Filter by File Type</div>
+      <div
+        class="flex flex-row flex-wrap items-center justify-center mt-2 mb-4"
+      >
+        {#each filtersAvailable as filter}
+          <label class="flex flex-row items-center mx-4 cursor-pointer">
+            <input
+              class="w-6 h-6 mr-2 bg-transparent border-2 rounded-md border-gray-650 text-purple"
+              type="checkbox"
+              bind:group={filterType}
+              name="filter-type"
+              value={filter}
+            />
+            <span class="text-lg uppercase">{filter}</span>
+          </label>
+        {/each}
+      </div>
+    </div>
+  {/if}
 
   <Table
     elements={filteredFiles}
