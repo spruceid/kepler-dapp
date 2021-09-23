@@ -55,6 +55,7 @@ module.exports = {
         'poppins': ['Poppins'],
         'satoshi': ['Satoshi'],
         'inter': ['Inter'],
+        'inconsolata': ['Inconsolata'],
       },
     },
   },

@@ -1,5 +1,8 @@
 export { default as ArrowDown } from './ArrowDown.svelte';
 export { default as ArrowUp } from './ArrowUp.svelte';
+export { default as CopyIcon } from './CopyIcon.svelte';
+export { default as SearchIcon } from './SearchIcon.svelte';
+export { default as FilterIcon } from './FilterIcon.svelte';
 export { default as FullLogo } from './FullLogo.svelte';
 export { default as Logo } from './Logo.svelte';
 export { default as RefreshIcon } from './RefreshIcon.svelte';

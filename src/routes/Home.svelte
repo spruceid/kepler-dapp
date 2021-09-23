@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onDestroy } from 'svelte';
+  import { get } from 'svelte/store';
   import { useNavigate } from 'svelte-navigator';
   import {
     Button,
@@ -8,6 +10,11 @@
     IconButton,
     RefreshIcon,
     UploadIcon,
+    FileStatus,
+    TextCode,
+    TextField,
+    SearchIcon,
+    FilterIcon,
   } from 'components';
   import {
     files,
@@ -17,6 +24,8 @@
   } from 'src/store';
   import type { TableColumn } from 'src/types';
   import filesize from 'filesize';
+  import { sortBy } from 'lodash';
+  import Fuse from 'fuse.js';
 
   const navigate = useNavigate();
 
@@ -43,6 +52,7 @@
     {
       header: { title: 'Type', id: 'type', allowSorting: false },
       path: 'type',
+      transform: (content) => content.toUpperCase(),
     },
     {
       header: { title: 'Created', id: 'created' },
@@ -57,14 +67,50 @@
     {
       header: { title: 'IPFS CID', id: 'cid' },
       path: 'cid',
+      options: (cid) => ({
+        value: cid,
+        copy: true,
+      }),
+      component: TextCode,
     },
     {
       header: { title: 'Status', id: 'status' },
       path: 'status',
+      options: (status) => ({
+        status,
+      }),
+      component: FileStatus,
     },
   ];
 
   let toggleFileInfo: (file: FileListEntry) => void;
+  let toggleFilter: () => void;
+
+  const buildSearchInstance = (value) => {
+    return new Fuse(value, {
+      keys: ['name', 'cid'],
+    });
+  };
+
+  let searchInstance = buildSearchInstance(get(files));
+
+  const unsubscribeFiles = files.subscribe((value) => {
+    searchInstance = buildSearchInstance(value);
+  });
+
+  let searchString: string = '';
+  let onSearchInput: (event) => void = (event) => {
+    searchString = event.target.value;
+  };
+
+  $: filteredFiles =
+    searchString !== ''
+      ? sortBy(searchInstance.search(searchString), 'score').map((e) => e.item)
+      : get(files);
+
+  onDestroy(() => {
+    unsubscribeFiles();
+  });
 </script>
 
 <BasePage>
@@ -74,8 +120,17 @@
     <IconButton icon={UploadIcon} onClick={upload} />
   </div>
 
+  <div class="flex flex-row items-center justify-end mx-4 mb-6">
+    <TextField
+      icon={SearchIcon}
+      name="search"
+      placeholder="Search files..."
+      onInput={onSearchInput}
+    />
+  </div>
+
   <Table
-    elements={$files}
+    elements={filteredFiles}
     columns={tableColumns}
     onRowClick={(element, _) => toggleFileInfo(element)}
     class="z-10"
