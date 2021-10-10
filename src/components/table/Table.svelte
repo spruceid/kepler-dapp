@@ -104,7 +104,7 @@
       <tbody>
         {#each sortedElements as object, rowIndex}
           <tr
-            class="text-sm border-b border-gray-650 hover:bg-purple hover:bg-opacity-10 transition-all ease-in-out duration-200"
+            class="text-sm border-b border-gray-650 hover:bg-purple hover:bg-opacity-10 transition-all ease-in-out duration-200 hover-show"
             class:cursor-pointer={onRowClick != null}
             on:click={() => onRowClick(object, rowIndex)}
           >

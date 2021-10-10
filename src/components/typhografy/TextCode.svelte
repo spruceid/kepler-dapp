@@ -29,7 +29,7 @@
   </p>
 
   {#if copy}
-    <div class="cursor-pointer" on:click|stopPropagation={action}>
+    <div class="cursor-pointer hover-show" on:click|stopPropagation={action}>
       <CopyIcon
         class="w-4 h-4 ml-2 text-white transform transition-all duration-100 hover:scale-110 "
       />

@@ -112,6 +112,14 @@
     width: 6px;
     background-color: #ccc;
   }
+
+  tr.hover-show td div div.hover-show {
+    visibility: hidden;
+  }
+
+  tr.hover-show:hover td div div.hover-show {
+    visibility: visible;
+  }
 </style>
 
 <script lang="ts">
