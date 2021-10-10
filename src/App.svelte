@@ -125,7 +125,39 @@
 <script lang="ts">
   import { Router, Route } from 'svelte-navigator';
   import { Splash, Home } from './routes';
+
+  import { captcha } from './captcha.ts';
+  import type { Captcha } from './captcha.ts';
+
+  import { CaptchaModal } from './modals';
+
+  let showCaptcha: bool = false;
+  let captchaData: Captcha = null;
+
+  const unsubscribeCaptcha = captcha.subscribe((value) => {
+    if (value) {
+      showCaptcha = true;
+      captchaData = value;
+    } else {
+      showCaptcha = false;
+      captchaData = null;
+    }
+  });
+
+  const onSubmitCaptcha = async (data: any) => {
+    await captchaData.callback(data);
+    captcha.set(null);
+  };
 </script>
+
+{#if showCaptcha}
+  <CaptchaModal
+    title={captchaData.title}
+    description={captchaData.description}
+    action={captchaData.action}
+    onSubmit={onSubmitCaptcha}
+  />
+{/if}
 
 <Router>
   <Route path="/">

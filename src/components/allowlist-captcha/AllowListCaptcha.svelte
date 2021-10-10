@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { createOrbit } from 'src/store';
   import 'vanilla-hcaptcha';
 
-  const submit = async ({ token }) => {
-    console.log('captcha: ', token);
-    await createOrbit(token);
+  export let onSubmit: () => void;
+
+  const submit = async (result) => {
+    console.log('captcha: ', result);
+    if (onSubmit) onSubmit(result.token);
   };
 </script>
 
