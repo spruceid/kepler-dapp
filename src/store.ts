@@ -142,15 +142,19 @@ const addToKepler = async (
 };
 
 export const createOrbit = async (captcha: string): Promise<void> => {
+  console.log('urls', keplerUrl, allowListUrl);
   const localWallet = get(wallet);
+  console.log('wallet', localWallet);
 
   if (!localWallet) {
     return;
   }
 
   controller = await tz(localWallet.client as any, didkit);
+  console.log('controller', controller);
 
   const params = didVmToParams(controller.id(), { index: '0' });
+  console.log('params', params);
   oid = await fetch(`${allowListUrl}/${params}`, {
     method: 'PUT',
     body: JSON.stringify([controller.id()]),
@@ -160,6 +164,8 @@ export const createOrbit = async (captcha: string): Promise<void> => {
       'X-Hcaptcha-Token': captcha,
     },
   }).then(async (res) => res.text());
+
+  console.log('oid', oid);
 
   await fetch(`${keplerUrl}/al/${oid}`, {
     method: 'POST',
@@ -231,6 +237,7 @@ export const fetchAllUris = async () => {
   const listResponse = await localKepler.list(oid);
   if (listResponse.status == 200) {
     const uris = (await listResponse.json()) as Array<string>;
+    console.log(uris);
     files.set(
       uris.map((uri) => {
         return {
