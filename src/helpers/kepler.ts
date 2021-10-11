@@ -6,12 +6,12 @@ export const addToKepler = async (
   pkh: string,
   ...obj: Array<any>
 ) => {
-  obj.forEach((o) => console.log(o));
+  // obj.forEach((o) => console.log(o));
   if (kepler) {
     // Get around the error of possibly passing nothing.
     let f = obj.pop();
     if (!f) {
-      throw new Error('Empty array passed to saveToKepler');
+      throw new Error('Empty array passed to addToKepler');
     }
 
     const res = await kepler.put(orbit, f, ...obj);
@@ -20,7 +20,7 @@ export const addToKepler = async (
       await saveToKepler(kepler, pkh, ...[f, ...obj]);
     }
     if (!res.ok || res.status !== 200) {
-      throw new Error(`Failed to create orbit: ${res.statusText}`);
+      throw new Error(`Failed to save object: ${res.statusText}`);
     }
 
     const addresses = await res.text();
@@ -69,6 +69,24 @@ export const saveToKepler = async (
         throw err;
       }
     }
+  }
+
+  throw new Error('No Kepler integration found');
+};
+
+export const removeFromKepler = async (
+  kepler: Kepler,
+  orbit: string,
+  pkh: string,
+  obj: string
+) => {
+  if (kepler) {
+    const res = await kepler.del(orbit, obj);
+    console.log('RES', res);
+    if (!res.ok || res.status !== 200) {
+      throw new Error(`Failed to remove object: ${res.statusText}`);
+    }
+    return;
   }
 
   throw new Error('No Kepler integration found');

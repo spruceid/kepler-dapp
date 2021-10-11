@@ -7,6 +7,7 @@
     BasePage,
     Table,
     FileInfo,
+    FileActions,
     IconButton,
     RefreshIcon,
     UploadIcon,
@@ -27,16 +28,25 @@
   import { sortBy } from 'lodash';
   import Fuse from 'fuse.js';
 
+  import { fileUpload } from 'src/file-upload';
+  import type { FileUpload } from 'src/file-upload';
+
   const navigate = useNavigate();
 
-  let filesToUpload;
-
   const upload = async () => {
-    try {
-      await uploadToKepler(filesToUpload);
-    } catch (e) {
-      console.error(e);
-    }
+    fileUpload.set({
+      title: 'Upload to Orbit',
+      callback: async (data) => {
+        try {
+          const parsed = await Promise.all(
+            data.map(async (file) => JSON.parse(await file.text()))
+          );
+          await uploadToKepler(parsed);
+        } catch (e) {
+          console.error(e);
+        }
+      },
+    });
   };
 
   const tableColumns: Array<TableColumn> = [
@@ -80,6 +90,14 @@
         status,
       }),
       component: FileStatus,
+    },
+    {
+      header: { title: 'Actions', id: 'actions', allowSorting: false },
+      path: 'cid',
+      options: (cid) => ({
+        cid,
+      }),
+      component: FileActions,
     },
   ];
 

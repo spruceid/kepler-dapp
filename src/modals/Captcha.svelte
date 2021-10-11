@@ -23,7 +23,7 @@
 <div
   class="absolute z-30 flex items-center justify-center w-full h-full bg-gray-900 bg-opacity-75"
 >
-  <div class="flex flex-col p-16 bg-gray-900 rounded-lg bg">
+  <div class="flex flex-col px-16 py-8 bg-gray-900 rounded-lg bg">
     <h5>{title}</h5>
 
     <TextBody1 class="mt-4" value={description} />

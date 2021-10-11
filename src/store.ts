@@ -30,7 +30,7 @@ export type FileListEntry = {
   type: string;
   createdAt: Date;
   cid: string;
-  status: 'pinned';
+  status: string;
 };
 
 const keplerUrl = process.env.KEPLER_URL;
@@ -75,17 +75,18 @@ wallet.subscribe((w) => {
 export const kepler = writable<Kepler>(null);
 
 export const files: Writable<Array<FileListEntry>> = writable(
-  Array(60)
-    .fill(null)
-    .map(() => ({
-      name: (Math.random() + 1).toString(36).substring(2),
-      size: Math.floor(Math.random() * 10000000000),
-      createdAt: new Date(),
-      type:
-        Math.random() > 0.66 ? 'json' : Math.random() > 0.5 ? 'jpeg' : 'mp4',
-      cid: 'zb38SNctyN1Qo6TPPTmgHXFdXg18vE9ToUV2wzLkSrHo1dxZ6',
-      status: 'pinned',
-    }))
+  //Array(60)
+  //.fill(null)
+  //.map(() => ({
+  //name: (Math.random() + 1).toString(36).substring(2),
+  //size: Math.floor(Math.random() * 10000000000),
+  //createdAt: new Date(),
+  //type:
+  //Math.random() > 0.66 ? 'json' : Math.random() > 0.5 ? 'jpeg' : 'mp4',
+  //cid: 'zb38SNctyN1Qo6TPPTmgHXFdXg18vE9ToUV2wzLkSrHo1dxZ6',
+  //status: 'pinned',
+  //}))
+  []
 );
 
 const sessionKey = writable<Capabilities>(null);
@@ -141,20 +142,44 @@ const addToKepler = async (
   }
 };
 
-export const createOrbit = async (captcha: string): Promise<void> => {
-  console.log('urls', keplerUrl, allowListUrl);
+const removeFromKepler = async (orbit: string, obj: string): Promise<void> => {
   const localWallet = get(wallet);
-  console.log('wallet', localWallet);
+  const localKepler = get(kepler);
+
+  if (!localWallet || !localKepler) {
+    return;
+  }
+
+  try {
+    await helpers.removeFromKepler(
+      localKepler,
+      orbit,
+      await localWallet.getPKH(),
+      obj
+    );
+    alert.set({
+      message: 'Successfully removed from Kepler',
+      variant: 'success',
+    });
+  } catch (e) {
+    alert.set({
+      message: e.message || JSON.stringify(e),
+      variant: 'error',
+    });
+    throw e;
+  }
+};
+
+export const createOrbit = async (captcha: string): Promise<void> => {
+  const localWallet = get(wallet);
 
   if (!localWallet) {
     return;
   }
 
   controller = await tz(localWallet.client as any, didkit);
-  console.log('controller', controller);
 
   const params = didVmToParams(controller.id(), { index: '0' });
-  console.log('params', params);
   oid = await fetch(`${allowListUrl}/${params}`, {
     method: 'PUT',
     body: JSON.stringify([controller.id()]),
@@ -165,7 +190,24 @@ export const createOrbit = async (captcha: string): Promise<void> => {
     },
   }).then(async (res) => res.text());
 
-  console.log('oid', oid);
+  localStorage.setItem(params, oid);
+
+  await fetch(`${keplerUrl}/al/${oid}`, {
+    method: 'POST',
+    body: params,
+  });
+};
+
+export const restoreOrbit = async (): Promise<void> => {
+  const localWallet = get(wallet);
+
+  if (!localWallet) {
+    return;
+  }
+
+  controller = await tz(localWallet.client as any, didkit);
+  const params = didVmToParams(controller.id(), { index: '0' });
+  oid = localStorage.getItem(params);
 
   await fetch(`${keplerUrl}/al/${oid}`, {
     method: 'POST',
@@ -174,6 +216,8 @@ export const createOrbit = async (captcha: string): Promise<void> => {
 };
 
 const initKepler = async (): Promise<void> => {
+  await restoreOrbit();
+
   if (!controller || !oid) {
     console.log('need to setup an orbit first');
     return;
@@ -238,24 +282,43 @@ export const fetchAllUris = async () => {
   if (listResponse.status == 200) {
     const uris = (await listResponse.json()) as Array<string>;
     console.log(uris);
-    files.set(
-      uris.map((uri) => {
+    const details = await Promise.all(
+      uris.map(async (uri) => {
+        const cid = uri.split('/').slice(-1)[0];
+        const fileResponse = await localKepler.get(oid, cid);
+        const fileBlob = await fileResponse.blob();
+        const size = fileBlob.size;
+        const fileText = await fileBlob.text();
+        const file = JSON.parse(fileText);
         return {
           name: 'Dummy name',
-          size: Math.floor(Math.random() * 10000000000 + 1000),
+          size,
           createdAt: new Date(),
           type: 'json',
-          cid: uri.split('/').slice(-1)[0],
+          cid,
           status: 'pinned',
         };
       })
     );
+
+    files.set(details);
   }
 };
 
-export const uploadToKepler = async (files: any) => {
-  const saveResponse = await addToKepler(oid, { date: new Date() });
+export const uploadToKepler = async (files: Array<any>) => {
+  const saveResponse = await addToKepler(oid, ...files);
   console.debug(saveResponse);
 
   await fetchAllUris();
+};
+
+export const deleteFromKepler = async (cid: string) => {
+  const deleteResponse = await removeFromKepler(oid, cid);
+  console.debug(deleteResponse);
+
+  await fetchAllUris();
+};
+
+export const getDownloadUrl = async (cid: string) => {
+  return `${keplerUrl}/${oid}/${cid}`;
 };

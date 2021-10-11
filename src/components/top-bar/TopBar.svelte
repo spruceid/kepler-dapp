@@ -8,11 +8,11 @@
 </script>
 
 <div
-  class="py-9 px-16 flex w-full items-center justify-end border-b border-gray-650"
+  class="flex items-center justify-end w-full px-16 border-b py-9 border-gray-650"
 >
   {#if $walletData}
-    <span class="flex flex-grow">Search</span>
-    <span class="rounded-lg bg-purple px-6 py-2">
+    <span class="flex flex-grow"></span>
+    <span class="px-6 py-2 rounded-lg bg-purple">
       {$walletData.account.address}
     </span>
   {:else}
