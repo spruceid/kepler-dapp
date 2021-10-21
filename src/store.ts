@@ -9,10 +9,11 @@ import {
 } from '@airgap/beacon-sdk';
 import { derived, get, readable, writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
-import { Kepler, startSession, didVmToParams } from 'kepler-sdk';
+import { Kepler, startSession, didVmToParams, S3, zcapAuthenticator } from 'kepler-sdk';
 import * as helpers from 'src/helpers/index';
 import { WalletInfo } from '@airgap/beacon-sdk/dist/cjs/events';
-import { Capabilities, tz, didkey, genJWK } from '@spruceid/zcap-providers';
+import { Capabilities, eth, didkey, genJWK } from '@spruceid/zcap-providers';
+import detectEthereumProvider from '@metamask/detect-provider';
 import * as didkit from '@spruceid/didkit-wasm';
 
 // The UI element for poping toast-like alerts
@@ -29,11 +30,11 @@ export type FileListEntry = {
   size: number;
   type: string;
   createdAt: Date;
-  cid: string;
   status: string;
 };
 
-const keplerUrl = process.env.KEPLER_URL;
+// const keplerUrls = process.env.KEPLER_URLS;
+const keplerUrls = ['http://test.mydomain.com:8000', 'http://test.mydomain.com:9000'];
 const allowListUrl = process.env.ALLOW_LIST_URL;
 
 let oid: string;
@@ -72,7 +73,7 @@ wallet.subscribe((w) => {
   );
 });
 
-export const kepler = writable<Kepler>(null);
+export const kepler = writable<S3>(null);
 
 export const files: Writable<Array<FileListEntry>> = writable(
   //Array(60)
@@ -94,7 +95,7 @@ const sessionKeyGeneratedAt = derived(kepler, ($kepler) =>
   $kepler ? new Date() : null
 );
 
-const sessionKeyDurationInMs = 60 * 1000;
+const sessionKeyDurationInMs = 60 * 1000 * 15;
 
 export const remainingSessionKeysTime = derived(
   [currentTime, sessionKeyGeneratedAt],
@@ -111,10 +112,12 @@ export const remainingSessionKeysTime = derived(
 
 // Kepler interactions
 const addToKepler = async (
-  orbit: string,
-  ...obj: Array<any>
-): Promise<Array<string>> => {
-  const localWallet = get(wallet);
+  key: string,
+  oid: string,
+  obj: Blob
+): Promise<string> => {
+  // @ts-ignore
+  const localWallet = window.ethereum;
   const localKepler = get(kepler);
 
   if (!localWallet || !localKepler) {
@@ -122,17 +125,16 @@ const addToKepler = async (
   }
 
   try {
-    let addresses = await helpers.addToKepler(
+    await helpers.addToKepler(
       localKepler,
-      orbit,
-      await localWallet.getPKH(),
-      ...obj
+      key,
+      obj
     );
     alert.set({
       message: 'Successfully uploaded to Kepler',
       variant: 'success',
     });
-    return addresses;
+    return key;
   } catch (e) {
     alert.set({
       message: e.message || JSON.stringify(e),
@@ -142,8 +144,9 @@ const addToKepler = async (
   }
 };
 
-const removeFromKepler = async (orbit: string, obj: string): Promise<void> => {
-  const localWallet = get(wallet);
+const removeFromKepler = async (obj: string): Promise<void> => {
+  // @ts-ignore
+  const localWallet = window.ethereum;
   const localKepler = get(kepler);
 
   if (!localWallet || !localKepler) {
@@ -153,9 +156,7 @@ const removeFromKepler = async (orbit: string, obj: string): Promise<void> => {
   try {
     await helpers.removeFromKepler(
       localKepler,
-      orbit,
-      await localWallet.getPKH(),
-      obj
+      obj,
     );
     alert.set({
       message: 'Successfully removed from Kepler',
@@ -170,49 +171,58 @@ const removeFromKepler = async (orbit: string, obj: string): Promise<void> => {
   }
 };
 
+const hostsToString = (h: { [key: string]: string[] }) =>
+  Object.keys(h).map(host => `${host}:${h[host].join(",")}`).join("|")
+
 export const createOrbit = async (captcha: string): Promise<void> => {
-  const localWallet = get(wallet);
+  // @ts-ignore
+  const localWallet = window.ethereum;
 
   if (!localWallet) {
     return;
   }
 
-  controller = await tz(localWallet.client as any, didkit);
+  controller = await eth(localWallet as any, didkit);
+  const authn = await zcapAuthenticator(controller);
 
-  const params = didVmToParams(controller.id(), { index: '0' });
-  oid = await fetch(`${allowListUrl}/${params}`, {
-    method: 'PUT',
-    body: JSON.stringify([controller.id()]),
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Hcaptcha-Sitekey': '10000000-ffff-ffff-ffff-000000000001',
-      'X-Hcaptcha-Token': captcha,
-    },
-  }).then(async (res) => res.text());
+  const hosts = await keplerUrls.reduce<Promise<{ [k: string]: string[] }>>(async (h, url) => {
+    const hs = await h;
+    const k = new Kepler(url, authn);
+    const id = await k.new_id();
+    hs[id] = [await k.id_addr(id)];
+    return hs
+  }, Promise.resolve({}))
+  const hostStr = hostsToString(hosts);
 
-  localStorage.setItem(params, oid);
+  let oid
 
-  await fetch(`${keplerUrl}/al/${oid}`, {
-    method: 'POST',
-    body: params,
-  });
+  for (const host in keplerUrls) {
+    const k = new Kepler(host, authn);
+    const res = await k.createOrbit([], { hosts: hostStr });
+    if (res.status !== 200) {
+      throw new Error(`orbit creation failed: ${await res.text()}`)
+    }
+    const newOid = await res.text()
+    if (!oid) {
+      oid = newOid
+    } else if (oid !== newOid) {
+      throw new Error("Oid not consistant between hosts")
+    }
+  }
+
+  localStorage.setItem(controller.id(), oid);
 };
 
 export const restoreOrbit = async (): Promise<void> => {
-  const localWallet = get(wallet);
+  // @ts-ignore
+  const localWallet = window.ethereum;
 
   if (!localWallet) {
     return;
   }
 
-  controller = await tz(localWallet.client as any, didkit);
-  const params = didVmToParams(controller.id(), { index: '0' });
-  oid = localStorage.getItem(params);
-
-  await fetch(`${keplerUrl}/al/${oid}`, {
-    method: 'POST',
-    body: params,
-  });
+  controller = await eth(localWallet as any, didkit);
+  oid = localStorage.getItem(controller.id());
 };
 
 const initKepler = async (): Promise<void> => {
@@ -226,8 +236,9 @@ const initKepler = async (): Promise<void> => {
   const newSessionKey = await didkey(genJWK(didkit), didkit);
   sessionKey.set(newSessionKey);
 
-  const newKepler = new Kepler(
-    keplerUrl,
+  const newKepler = new S3(
+    keplerUrls[0],
+    oid,
     await startSession(
       oid,
       controller,
@@ -241,25 +252,28 @@ const initKepler = async (): Promise<void> => {
 };
 
 export const initWallet = async (): Promise<void> => {
-  const options = {
-    name: 'Kepler',
-    iconUrl: 'https://tezostaquito.io/img/favicon.png',
-    preferredNetwork: NetworkType.FLORENCENET,
-  };
+  // const options = {
+  //   name: 'Kepler',
+  //   iconUrl: 'https://tezostaquito.io/img/favicon.png',
+  //   preferredNetwork: NetworkType.FLORENCENET,
+  // };
 
-  const requestPermissionsInput = {
-    network: {
-      type: NetworkType.FLORENCENET,
-      rpcUrl: `https://${NetworkType.FLORENCENET}.smartpy.io/`,
-      name: NetworkType.FLORENCENET,
-    },
-  };
+  // const requestPermissionsInput = {
+  //   network: {
+  //     type: NetworkType.FLORENCENET,
+  //     rpcUrl: `https://${NetworkType.FLORENCENET}.smartpy.io/`,
+  //     name: NetworkType.FLORENCENET,
+  //   },
+  // };
 
-  const newWallet = new BeaconWallet(options);
+  // const newWallet = new BeaconWallet(options);
+  //
+
+  await detectEthereumProvider();
 
   try {
-    wallet.set(newWallet);
-    await newWallet.requestPermissions(requestPermissionsInput);
+    // wallet.set(newWallet);
+    // await newWallet.requestPermissions(requestPermissionsInput);
     await initKepler();
   } catch (e) {
     wallet.set(null);
@@ -278,24 +292,21 @@ export const fetchAllUris = async () => {
     return;
   }
 
-  const listResponse = await localKepler.list(oid);
+  const listResponse = await localKepler.list();
   if (listResponse.status == 200) {
     const uris = (await listResponse.json()) as Array<string>;
     console.log(uris);
     const details = await Promise.all(
       uris.map(async (uri) => {
-        const cid = uri.split('/').slice(-1)[0];
-        const fileResponse = await localKepler.get(oid, cid);
-        const fileBlob = await fileResponse.blob();
-        const size = fileBlob.size;
-        const fileText = await fileBlob.text();
-        const file = JSON.parse(fileText);
+        const name = uri.split('/').slice(-1)[0];
+        const fileResponse = await localKepler.head(name);
+        const size = parseInt(fileResponse.headers.get('content-length') || "0");
+        const modified = new Date(fileResponse.headers.get('last-modified') || new Date())
         return {
-          name: 'Dummy name',
+          name,
           size,
-          createdAt: new Date(),
+          createdAt: modified,
           type: 'json',
-          cid,
           status: 'pinned',
         };
       })
@@ -306,19 +317,18 @@ export const fetchAllUris = async () => {
 };
 
 export const uploadToKepler = async (files: Array<any>) => {
-  const saveResponse = await addToKepler(oid, ...files);
-  console.debug(saveResponse);
+  await Promise.all(files.map(async file => console.log(await addToKepler("", oid, file))))
 
   await fetchAllUris();
 };
 
 export const deleteFromKepler = async (cid: string) => {
-  const deleteResponse = await removeFromKepler(oid, cid);
+  const deleteResponse = await removeFromKepler(cid);
   console.debug(deleteResponse);
 
   await fetchAllUris();
 };
 
-export const getDownloadUrl = async (cid: string) => {
-  return `${keplerUrl}/${oid}/${cid}`;
+export const getDownloadUrl = async (key: string) => {
+  return `${keplerUrls[0]}/${oid}/s3/${key}`;
 };

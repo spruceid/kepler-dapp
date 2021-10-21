@@ -94,8 +94,8 @@ module.exports = {
             BUILD_MODE_DEV: !prod,
         }),
         new webpack.EnvironmentPlugin({
-            KEPLER_URL: 'http://localhost:8000',
-            ALLOW_LIST_URL: 'http://localhost:10000'
+            KEPLER_URLS: 'http://test.mydomain.com:8000',
+            ALLOW_LIST_URL: 'http://test.mydomain.com:10000'
         }),
     ],
     devtool: prod ? false : 'source-map',

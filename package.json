@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "devDependencies": {
     "@tsconfig/svelte": "^1.0.10",
-    "@types/node": "^14.11.1",
+    "@types/node": "^16.10.3",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",
     "autoprefixer": "^10.2.5",
@@ -36,8 +36,10 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
-    "@spruceid/didkit-wasm": "^0.1.9",
-    "@spruceid/zcap-providers": "^0.1.1",
+    "@metamask/detect-provider": "^1.2.0",
+    "@metamask/providers": "^8.1.1",
+    "@spruceid/didkit-wasm": "file:../didkit/lib/web/pkg",
+    "@spruceid/zcap-providers": "file:../zcap-providers",
     "@tailwindcss/forms": "^0.3.3",
     "@taquito/beacon-wallet": "^10.1.0",
     "@types/lodash": "^4.14.172",
