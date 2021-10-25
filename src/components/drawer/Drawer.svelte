@@ -9,13 +9,8 @@
     await createOrbit(token);
   };
 
-  const createNewOrbit = () => {
-    captcha.set({
-      title: 'Create New Orbit',
-      description: 'To create a new orbit, please solve the captcha below.',
-      action: 'Create',
-      callback: handleCaptchaResult,
-    });
+  const createNewOrbit = async () => {
+      await createOrbit();
   };
 </script>
 

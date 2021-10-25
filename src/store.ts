@@ -174,9 +174,8 @@ const removeFromKepler = async (obj: string): Promise<void> => {
 const hostsToString = (h: { [key: string]: string[] }) =>
   Object.keys(h).map(host => `${host}:${h[host].join(",")}`).join("|")
 
-export const createOrbit = async (captcha: string): Promise<void> => {
-  // @ts-ignore
-  const localWallet = window.ethereum;
+export const createOrbit = async (captcha?: string): Promise<void> => {
+  const localWallet = get(wallet);
 
   if (!localWallet) {
     return;
@@ -196,8 +195,11 @@ export const createOrbit = async (captcha: string): Promise<void> => {
 
   let oid
 
-  for (const host in keplerUrls) {
-    const k = new Kepler(host, authn);
+  console.log(keplerUrls)
+  for (const n in keplerUrls) {
+    const url = keplerUrls[n]
+    console.log('create at ', url);
+    const k = new Kepler(url, authn);
     const res = await k.createOrbit([], { hosts: hostStr });
     if (res.status !== 200) {
       throw new Error(`orbit creation failed: ${await res.text()}`)
@@ -209,8 +211,13 @@ export const createOrbit = async (captcha: string): Promise<void> => {
       throw new Error("Oid not consistant between hosts")
     }
   }
+  if (!oid) {
+    throw new Error("No Hosts");
+  }
 
   localStorage.setItem(controller.id(), oid);
+
+  await initKepler()
 };
 
 export const restoreOrbit = async (): Promise<void> => {
