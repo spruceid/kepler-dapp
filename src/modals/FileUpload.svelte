@@ -24,9 +24,7 @@
     active = false;
     files = [
       ...files,
-      ...[...event.dataTransfer.files].filter(
-        (f) => f.type === 'application/json'
-      ),
+      ...event.dataTransfer.files,
     ];
   };
 

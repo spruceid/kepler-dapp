@@ -38,10 +38,7 @@
       title: 'Upload to Orbit',
       callback: async (data) => {
         try {
-          const parsed = await Promise.all(
-            data.map(async (file) => JSON.parse(await file.text()))
-          );
-          await uploadToKepler(parsed);
+          await uploadToKepler(data);
         } catch (e) {
           console.error(e);
         }
@@ -75,15 +72,6 @@
         }),
     },
     {
-      header: { title: 'IPFS CID', id: 'cid' },
-      path: 'cid',
-      options: (cid) => ({
-        value: cid,
-        copy: true,
-      }),
-      component: TextCode,
-    },
-    {
       header: { title: 'Status', id: 'status' },
       path: 'status',
       options: (status) => ({
@@ -93,9 +81,9 @@
     },
     {
       header: { title: 'Actions', id: 'actions', allowSorting: false },
-      path: 'cid',
-      options: (cid) => ({
-        cid,
+      path: 'name',
+      options: (name) => ({
+        name,
       }),
       component: FileActions,
     },
@@ -106,7 +94,7 @@
 
   const buildSearchInstance = (value) => {
     return new Fuse(value, {
-      keys: ['name', 'cid'],
+      keys: ['name'],
     });
   };
 

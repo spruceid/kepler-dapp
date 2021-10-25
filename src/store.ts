@@ -300,13 +300,13 @@ export const fetchAllUris = async () => {
       uris.map(async (uri) => {
         const name = uri.split('/').slice(-1)[0];
         const fileResponse = await localKepler.head(name);
-        const size = parseInt(fileResponse.headers.get('content-length') || "0");
+        const size = parseInt(fileResponse.headers.get('Content-Length') || "0");
         const modified = new Date(fileResponse.headers.get('last-modified') || new Date())
         return {
           name,
           size,
           createdAt: modified,
-          type: 'json',
+          type: name.split('.').slice(-1)[0],
           status: 'pinned',
         };
       })
@@ -316,8 +316,8 @@ export const fetchAllUris = async () => {
   }
 };
 
-export const uploadToKepler = async (files: Array<any>) => {
-  await Promise.all(files.map(async file => console.log(await addToKepler("", oid, file))))
+export const uploadToKepler = async (files: Array<File>) => {
+  await Promise.all(files.map(async file => console.log(await addToKepler(file.name, file))))
 
   await fetchAllUris();
 };

@@ -2,22 +2,22 @@
   import { getDownloadUrl, deleteFromKepler } from 'src/store';
   import { DownloadIcon, TrashIcon } from 'components';
 
-  export let cid: string;
+  export let name: string;
 
   const onDownload = async () => {
-    const downloadUrl = await getDownloadUrl(cid);
+    const downloadUrl = await getDownloadUrl(name);
     window.open(downloadUrl, '_blank');
   };
 
   const onDelete = async () => {
-    await deleteFromKepler(cid);
+    await deleteFromKepler(name);
   };
 </script>
 
 <div class="flex flex-row">
   <div
     class="cursor-pointer"
-    title="Download {cid}"
+    title="Download {name}"
     on:click|stopPropagation={onDownload}
   >
     <DownloadIcon
@@ -27,7 +27,7 @@
 
   <div
     class="ml-3 sr-onlycursor-pointer"
-    title="Delete {cid}"
+    title="Delete {name}"
     on:click|stopPropagation={onDelete}
   >
     <TrashIcon

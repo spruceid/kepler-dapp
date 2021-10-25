@@ -18,7 +18,7 @@
   onMount(() => {
     toggle = (f: FileListEntry) => {
       attributes = [
-        { label: 'Size', value: filesize(f.size) },
+        { label: 'Size', value: `${f.size} B` },
         { label: 'Type', value: f.type },
         {
           label: 'Created',
