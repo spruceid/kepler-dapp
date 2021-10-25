@@ -12,8 +12,7 @@ import type { Writable } from 'svelte/store';
 import { Kepler, startSession, didVmToParams, S3, zcapAuthenticator } from 'kepler-sdk';
 import * as helpers from 'src/helpers/index';
 import { WalletInfo } from '@airgap/beacon-sdk/dist/cjs/events';
-import { Capabilities, eth, didkey, genJWK } from '@spruceid/zcap-providers';
-import detectEthereumProvider from '@metamask/detect-provider';
+import { Capabilities, tz, didkey, genJWK } from '@spruceid/zcap-providers';
 import * as didkit from '@spruceid/didkit-wasm';
 
 // The UI element for poping toast-like alerts
@@ -35,6 +34,7 @@ export type FileListEntry = {
 
 // const keplerUrls = process.env.KEPLER_URLS;
 const keplerUrls = ['http://test.mydomain.com:8000', 'http://test.mydomain.com:9000'];
+// const keplerUrls = ['http://test.mydomain.com:8000'];
 const allowListUrl = process.env.ALLOW_LIST_URL;
 
 let oid: string;
@@ -113,11 +113,9 @@ export const remainingSessionKeysTime = derived(
 // Kepler interactions
 const addToKepler = async (
   key: string,
-  oid: string,
   obj: Blob
 ): Promise<string> => {
-  // @ts-ignore
-  const localWallet = window.ethereum;
+  const localWallet = get(wallet);
   const localKepler = get(kepler);
 
   if (!localWallet || !localKepler) {
@@ -145,8 +143,7 @@ const addToKepler = async (
 };
 
 const removeFromKepler = async (obj: string): Promise<void> => {
-  // @ts-ignore
-  const localWallet = window.ethereum;
+  const localWallet = get(wallet);
   const localKepler = get(kepler);
 
   if (!localWallet || !localKepler) {
@@ -178,10 +175,11 @@ export const createOrbit = async (captcha?: string): Promise<void> => {
   const localWallet = get(wallet);
 
   if (!localWallet) {
+    console.log('no wallet');
     return;
   }
 
-  controller = await eth(localWallet as any, didkit);
+  controller = await tz(localWallet.client as any, didkit);
   const authn = await zcapAuthenticator(controller);
 
   const hosts = await keplerUrls.reduce<Promise<{ [k: string]: string[] }>>(async (h, url) => {
@@ -221,14 +219,13 @@ export const createOrbit = async (captcha?: string): Promise<void> => {
 };
 
 export const restoreOrbit = async (): Promise<void> => {
-  // @ts-ignore
-  const localWallet = window.ethereum;
+  const localWallet = get(wallet);
 
   if (!localWallet) {
     return;
   }
 
-  controller = await eth(localWallet as any, didkit);
+  controller = await tz(localWallet.client as any, didkit);
   oid = localStorage.getItem(controller.id());
 };
 
@@ -259,28 +256,25 @@ const initKepler = async (): Promise<void> => {
 };
 
 export const initWallet = async (): Promise<void> => {
-  // const options = {
-  //   name: 'Kepler',
-  //   iconUrl: 'https://tezostaquito.io/img/favicon.png',
-  //   preferredNetwork: NetworkType.FLORENCENET,
-  // };
+  const options = {
+    name: 'Kepler',
+    iconUrl: 'https://tezostaquito.io/img/favicon.png',
+    preferredNetwork: NetworkType.FLORENCENET,
+  };
 
-  // const requestPermissionsInput = {
-  //   network: {
-  //     type: NetworkType.FLORENCENET,
-  //     rpcUrl: `https://${NetworkType.FLORENCENET}.smartpy.io/`,
-  //     name: NetworkType.FLORENCENET,
-  //   },
-  // };
+  const requestPermissionsInput = {
+    network: {
+      type: NetworkType.FLORENCENET,
+      rpcUrl: `https://${NetworkType.FLORENCENET}.smartpy.io/`,
+      name: NetworkType.FLORENCENET,
+    },
+  };
 
-  // const newWallet = new BeaconWallet(options);
-  //
-
-  await detectEthereumProvider();
+  const newWallet = new BeaconWallet(options);
 
   try {
-    // wallet.set(newWallet);
-    // await newWallet.requestPermissions(requestPermissionsInput);
+    wallet.set(newWallet);
+    await newWallet.requestPermissions(requestPermissionsInput);
     await initKepler();
   } catch (e) {
     wallet.set(null);
