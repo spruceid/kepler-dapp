@@ -1,10 +1,13 @@
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 const sveltePreprocess = require('svelte-preprocess');
 const webpack = require('webpack');
 
+
 const mode = process.env.NODE_ENV || 'development';
 const prod = mode === 'production';
+const assetPath = process.env.ASSET_PATH || '/';
 
 module.exports = {
     entry: {
@@ -32,6 +35,7 @@ module.exports = {
         },
     },
     output: {
+        publicPath: assetPath,
         path: path.join(__dirname, '/public'),
         filename: '[name].js',
         chunkFilename: '[name].[id].js',
@@ -83,6 +87,9 @@ module.exports = {
     },
     mode,
     plugins: [
+        // new webpack.DefinePlugin({
+        //     'process.env.ASSET_PATH': JSON.stringify(assetPath),
+        // }),
         new webpack.ProvidePlugin({
             Buffer: ['buffer', 'Buffer'],
             'process/browser': 'process/browser',
@@ -97,6 +104,14 @@ module.exports = {
             KEPLER_URLS: 'http://test.mydomain.com:8000',
             ALLOW_LIST_URL: 'http://test.mydomain.com:10000'
         }),
+        new HtmlWebpackPlugin({
+            title: 'Kepler',
+            template: 'index.html',
+            base: assetPath + 'index.html',
+            meta: {
+                viewport: 'width=device-width,initial-scale=1',
+            }
+        })
     ],
     devtool: prod ? false : 'source-map',
     devServer: {
