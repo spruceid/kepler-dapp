@@ -87,9 +87,6 @@ module.exports = {
     },
     mode,
     plugins: [
-        // new webpack.DefinePlugin({
-        //     'process.env.ASSET_PATH': JSON.stringify(assetPath),
-        // }),
         new webpack.ProvidePlugin({
             Buffer: ['buffer', 'Buffer'],
             'process/browser': 'process/browser',
@@ -102,12 +99,13 @@ module.exports = {
         }),
         new webpack.EnvironmentPlugin({
             KEPLER_URLS: 'http://test.mydomain.com:8000',
-            ALLOW_LIST_URL: 'http://test.mydomain.com:10000'
+            ALLOW_LIST_URL: 'http://test.mydomain.com:10000',
+            ASSET_PATH: assetPath
         }),
         new HtmlWebpackPlugin({
             title: 'Kepler',
             template: 'index.html',
-            base: assetPath + 'index.html',
+            base: assetPath,
             meta: {
                 viewport: 'width=device-width,initial-scale=1',
             }

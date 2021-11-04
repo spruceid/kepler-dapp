@@ -127,13 +127,14 @@
   import { Splash, Home } from './routes';
 
   import { CaptchaModal, FileUploadModal } from 'src/modals';
+  export let basepath = '/';
 </script>
 
 <CaptchaModal />
 <FileUploadModal />
 
-<Router>
-  <Route path="/">
+<Router basepath={basepath}>
+  <Route path="/index.html">
     <Splash />
   </Route>
   <Route path="/app">
