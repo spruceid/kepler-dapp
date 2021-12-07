@@ -13,7 +13,7 @@
   {#if $walletData}
     <span class="flex flex-grow"></span>
     <span class="px-6 py-2 rounded-lg bg-purple">
-      {$walletData.account.address}
+      {$walletData.account}
     </span>
   {:else}
     <Button text="Connect Wallet" mini onClick={connect} />

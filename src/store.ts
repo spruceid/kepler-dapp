@@ -1,19 +1,10 @@
-import { BeaconWallet } from '@taquito/beacon-wallet';
-import {
-  NetworkType,
-  BeaconEvent,
-  AccountInfo,
-  PermissionResponseOutput,
-  BlockExplorer,
-  ConnectionContext,
-} from '@airgap/beacon-sdk';
 import { derived, get, readable, writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
-import { Kepler, startSession, didVmToParams, S3, zcapAuthenticator } from 'kepler-sdk';
+import { Kepler, S3, zcapAuthenticator, siweAuthenticator, startSIWESession } from 'kepler-sdk';
 import * as helpers from 'src/helpers/index';
-import { WalletInfo } from '@airgap/beacon-sdk/dist/cjs/events';
-import { Capabilities, tz, didkey, genJWK } from '@spruceid/zcap-providers';
+import { Capabilities, didkey, genJWK } from '@spruceid/zcap-providers';
 import * as didkit from '@spruceid/didkit-wasm';
+import { Signer, providers } from "ethers";
 
 // The UI element for poping toast-like alerts
 export const alert: Writable<{
@@ -38,7 +29,6 @@ const keplerUrls = ['http://test.mydomain.com:8000', 'http://test.mydomain.com:9
 const allowListUrl = process.env.ALLOW_LIST_URL;
 
 let oid: string;
-let controller: Capabilities;
 
 // Store that always contains the current time.
 const currentTime = readable(new Date(), (set) => {
@@ -52,25 +42,16 @@ const currentTime = readable(new Date(), (set) => {
 });
 
 export const walletData: Writable<{
-  account: AccountInfo;
-  output: PermissionResponseOutput;
-  blockExplorer: BlockExplorer;
-  connectionContext: ConnectionContext;
-  walletInfo: WalletInfo;
+  account: string;
 }> = writable(null);
 
-export const wallet = writable<BeaconWallet>(null);
+export const wallet = writable<Signer>(null);
 wallet.subscribe((w) => {
   if (!w) {
     return;
   }
 
-  w.client.subscribeToEvent(
-    BeaconEvent.PERMISSION_REQUEST_SUCCESS,
-    async (data) => {
-      walletData.set(data);
-    }
-  );
+  w.getAddress().then(account => walletData.set({ account }))
 });
 
 export const kepler = writable<S3>(null);
@@ -179,8 +160,7 @@ export const createOrbit = async (captcha?: string): Promise<void> => {
     return;
   }
 
-  controller = await tz(localWallet.client as any, didkit);
-  const authn = await zcapAuthenticator(controller);
+  const authn = await siweAuthenticator(localWallet, window.location.hostname, "1");
 
   const hosts = await keplerUrls.reduce<Promise<{ [k: string]: string[] }>>(async (h, url) => {
     const hs = await h;
@@ -213,7 +193,7 @@ export const createOrbit = async (captcha?: string): Promise<void> => {
     throw new Error("No Hosts");
   }
 
-  localStorage.setItem(controller.id(), oid);
+  localStorage.setItem(await localWallet.getAddress(), oid);
 
   await initKepler()
 };
@@ -225,56 +205,45 @@ export const restoreOrbit = async (): Promise<void> => {
     return;
   }
 
-  controller = await tz(localWallet.client as any, didkit);
-  oid = localStorage.getItem(controller.id());
+  oid = localStorage.getItem(await localWallet.getAddress());
 };
 
 const initKepler = async (): Promise<void> => {
   await restoreOrbit();
+  const localWallet = get(wallet);
 
-  if (!controller || !oid) {
+  if (!oid) {
     console.log('need to setup an orbit first');
     return;
   }
 
   const newSessionKey = await didkey(genJWK(didkit), didkit);
   sessionKey.set(newSessionKey);
+  const sessionDoc = await startSIWESession(
+    oid,
+    window.location.hostname,
+    "1",
+    await localWallet.getAddress(),
+    newSessionKey.id(),
+    ['put', 'del', 'get', 'list'],
+    { exp: new Date(Date.now() + sessionKeyDurationInMs) }
+  );
+  sessionDoc.signature = await localWallet.signMessage(sessionDoc.toMessage());
 
   const newKepler = new S3(
     keplerUrls[0],
     oid,
-    await startSession(
-      oid,
-      controller,
-      newSessionKey,
-      ['put', 'del', 'get', 'list'],
-      sessionKeyDurationInMs
-    )
+    await zcapAuthenticator(newSessionKey, sessionDoc)
   );
 
   kepler.set(newKepler);
 };
 
 export const initWallet = async (): Promise<void> => {
-  const options = {
-    name: 'Kepler',
-    iconUrl: 'https://tezostaquito.io/img/favicon.png',
-    preferredNetwork: NetworkType.FLORENCENET,
-  };
-
-  const requestPermissionsInput = {
-    network: {
-      type: NetworkType.FLORENCENET,
-      rpcUrl: `https://${NetworkType.FLORENCENET}.smartpy.io/`,
-      name: NetworkType.FLORENCENET,
-    },
-  };
-
-  const newWallet = new BeaconWallet(options);
-
   try {
-    wallet.set(newWallet);
-    await newWallet.requestPermissions(requestPermissionsInput);
+    // @ts-ignore
+    const signer = new providers.Web3Provider(window.ethereum).getSigner();
+    wallet.set(signer);
     await initKepler();
   } catch (e) {
     wallet.set(null);
