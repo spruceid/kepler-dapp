@@ -464,11 +464,15 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@spruceid/didkit-wasm@file:../didkit/lib/web/pkg":
-  version "0.1.0"
+"@spruceid/didkit-wasm@^0.1.9":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@spruceid/didkit-wasm/-/didkit-wasm-0.1.9.tgz#0e835f8461eee1e03dd270ed206b653a173aadd1"
+  integrity sha512-VUP7bm7uWrAjSKzqAvgsAmueFLQ6MhaCN2INGxUmWhcZe9x87DeUneaeqJV2QuLsdPrwowmNcKnyZtJeNeWqIQ==
 
-"@spruceid/zcap-providers@file:../zcap-providers":
+"@spruceid/zcap-providers@^0.1.1":
   version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@spruceid/zcap-providers/-/zcap-providers-0.1.1.tgz#22e7d331595d4462aceb5742c7240507219c564b"
+  integrity sha512-PvIefM/BOAZLzddMyAt5MiPH7iSdxtfNS7mtbpr7lc5fyF3eJvDu6IVMbLWfBA4xtRxq76EAiB1uwg4isgj+fA==
   dependencies:
     uuid "^8.3.2"
 

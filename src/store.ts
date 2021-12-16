@@ -23,9 +23,7 @@ export type FileListEntry = {
   status: string;
 };
 
-// const keplerUrls = process.env.KEPLER_URLS;
-const keplerUrls = ['http://test.mydomain.com:8000', 'http://test.mydomain.com:9000'];
-// const keplerUrls = ['http://test.mydomain.com:8000'];
+const keplerUrls = process.env.KEPLER_URLS.split(',') || ['http://localhost:8000'];
 const allowListUrl = process.env.ALLOW_LIST_URL;
 
 let oid: string;
@@ -242,7 +240,9 @@ const initKepler = async (): Promise<void> => {
 export const initWallet = async (): Promise<void> => {
   try {
     // @ts-ignore
-    const signer = new providers.Web3Provider(window.ethereum).getSigner();
+    const provider = new providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []).then(console.log);
+    const signer = provider.getSigner();
     wallet.set(signer);
     await initKepler();
   } catch (e) {
