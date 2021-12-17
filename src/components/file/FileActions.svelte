@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { getDownloadUrl, deleteFromKepler } from 'src/store';
-  import { DownloadIcon, TrashIcon } from 'components';
+  import { getDownloadUrl, deleteFromKepler, shareFromKepler } from 'src/store';
+  import { DownloadIcon, TrashIcon, CloudUpload } from 'components';
 
   export let name: string;
 
@@ -11,6 +11,10 @@
 
   const onDelete = async () => {
     await deleteFromKepler(name);
+  };
+
+  const onShare = async () => {
+    await navigator.clipboard.writeText(await shareFromKepler(name));
   };
 </script>
 
@@ -31,6 +35,16 @@
     on:click|stopPropagation={onDelete}
   >
     <TrashIcon
+      class="w-4 h-4 text-white transform transition-all duration-100 hover:scale-110 "
+    />
+  </div>
+
+  <div
+    class="onlycursor-pointer"
+    title="Share {name}"
+    on:click|stopPropagation={onShare}
+  >
+    <CloudUpload
       class="w-4 h-4 text-white transform transition-all duration-100 hover:scale-110 "
     />
   </div>

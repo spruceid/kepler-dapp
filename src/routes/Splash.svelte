@@ -1,14 +1,23 @@
 <script lang="ts">
   import { FullLogo, Button, TextBody1 } from 'components';
   import { useNavigate } from 'svelte-navigator';
+  import { Download } from 'src/routes';
 
   const navigate = useNavigate();
+
+ console.log(window.location);
+ const p = new URLSearchParams(window.location.search);
+ const authz = p.get('authz');
+ const key = p.get('key');
 
   const launchApp = () => {
     navigate('/app');
   };
 </script>
 
+{#if typeof authz === 'string'}
+    <Download {authz} {key}/>
+{:else}
 <div class="flex flex-grow flex-col justify-between bg-indigo-600">
   <header>
     <div class="flex flex-row pt-20 md:px-20 px-8 items-center justify-between">
@@ -46,3 +55,4 @@
     </div>
   </footer>
 </div>
+{/if}

@@ -67,7 +67,6 @@
                 id="file-upload"
                 name="file-upload"
                 on:change={onInput}
-                accept="application/json"
                 multiple
               />
             </div>
@@ -88,7 +87,6 @@
                     id="file-upload"
                     name="file-upload"
                     on:change={onInput}
-                    accept="application/json"
                     multiple
                   />
                 </div>

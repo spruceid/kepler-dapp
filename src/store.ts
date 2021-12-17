@@ -5,6 +5,8 @@ import * as helpers from 'src/helpers/index';
 import { Capabilities, didkey, genJWK } from '@spruceid/zcap-providers';
 import * as didkit from '@spruceid/didkit-wasm';
 import { Signer, providers } from "ethers";
+import { base64url } from 'rfc4648';
+import { SiweMessage } from 'siwe';
 
 // The UI element for poping toast-like alerts
 export const alert: Writable<{
@@ -23,7 +25,7 @@ export type FileListEntry = {
   status: string;
 };
 
-const keplerUrls = process.env.KEPLER_URLS.split(',') || ['http://localhost:8000'];
+export const keplerUrls = process.env.KEPLER_URLS.split(',') || ['http://localhost:8000'];
 const allowListUrl = process.env.ALLOW_LIST_URL;
 
 let oid: string;
@@ -120,6 +122,36 @@ const addToKepler = async (
     throw e;
   }
 };
+
+export const shareFromKepler = async (key: string): Promise<string> => {
+  const localWallet = get(wallet);
+
+  if (!localWallet) {
+    return;
+  }
+
+  const now = Date.now();
+
+  // @ts-ignore
+  const signer = new providers.Web3Provider(window.ethereum).getSigner();
+  const sessionDoc = new SiweMessage({
+    domain: window.location.hostname,
+    address: await localWallet.getAddress(),
+    uri: "did:*",
+    version: "1", chainId: "1",
+    statement: `Share ${key} with a link`,
+    issuedAt: new Date(now).toISOString(),
+    expirationTime: new Date(now + (2 * 60 * 1000 * 60 * 24)).toISOString(),
+    resources: [`kepler://${oid}/s3/${key}#get`]
+  });
+  const m = sessionDoc.toMessage();
+  const signature = await signer.signMessage(m);
+
+  const p = new URLSearchParams();
+  p.append('key', key);
+  p.append('authz', base64url.stringify(new TextEncoder().encode(JSON.stringify([m, signature]))))
+  return window.location.origin + "/index.html?" + p.toString();
+}
 
 const removeFromKepler = async (obj: string): Promise<void> => {
   const localWallet = get(wallet);
