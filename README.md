@@ -4,7 +4,7 @@ An example DApp which uses SIWE to authenticate with Kepler, and provides an int
 
 ## Quickstart: Kepler+SIWE
 
-This guide will take you through the steps of getting Kepler running and creating an orbit using this Dapp. The steps below will assume you are using a Unix shell. If you are using Windows Powershell the general steps should still be correct, however some of the commands may be different. Alternatively you may find it easier to use [WSL2](https://docs.microsoft.com/en-us/windows/wsl/about) and run these commands directly.
+This guide will take you through the steps of getting Kepler running and creating an orbit using this Dapp. The steps below will assume you are using a Unix shell. If you are using Windows Powershell the general steps should still be correct, however some of the commands may be different. Alternatively you may find it easier to use [WSL2](https://docs.microsoft.com/en-us/windows/wsl/about) and run these commands directly, making sure `libssl-dev` and `pkg-config` are present.
 
 ### Step 0: Requirements
 
