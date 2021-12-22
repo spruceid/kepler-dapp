@@ -4,7 +4,7 @@ An example DApp which uses SIWE to authenticate with Kepler, and provides an int
 
 ## Quickstart: Kepler+SIWE
 
-This guide will take you through the steps of getting Kepler running and creating an orbit using this Dapp. The steps below will assume you are using a Unix shell. If you are using Windows Powershell the general steps should still be correct, however some of the commands may be different. Alternatively you may find it easier to use [WSL2](https://docs.microsoft.com/en-us/windows/wsl/about) and run these commands directly, making sure `libssl-dev` and `pkg-config` are present.
+This guide will take you through the steps of getting Kepler running and creating an orbit using this Dapp. The steps below will assume you are using a Unix shell. If you are on a Windows machine I would recommend using [WSL2](https://docs.microsoft.com/en-us/windows/wsl/about).
 
 ### Step 0: Requirements
 
@@ -15,9 +15,20 @@ To run Kepler:
 - [rustup](https://www.rust-lang.org/tools/install)
 
 To run this Dapp:
+- [node](https://nodejs.dev) >= 12.0.0. If you have any errors when running the Dapp try using [nvm](https://github.com/nvm-sh/nvm#installing-and-updating) to downgrade node to version 12.
 - [yarn](https://yarnpkg.com)
 - a browser with the [metamask wallet extension](https://metamask.io), and a ethereum account connected to the wallet
 
+If you are using WSL or another minimal Linux installation you may need to install the following to run Kepler:
+- pkg-config
+- libssl-dev
+- gcc
+
+For example on Ubuntu you could run:
+```
+sudo apt-get update
+sudo apt-get install pkg-config libssl-dev build-essential
+```
 
 ### Step 1: Running Kepler locally
 
@@ -25,7 +36,7 @@ This quickstart guide will assume you are running a particular version of Kepler
 
 1. Browse to a suitable directory on your machine, clone Kepler and change to that directory.
 ```bash
-git clone git@github.com:spruceid/kepler.git
+git clone https://github.com/spruceid/kepler.git
 cd kepler
 ```
 
@@ -52,6 +63,7 @@ mkdir /tmp/kepler
 # Use the directory you created in step 4 here:
 export KEPLER_DATABASE_PATH=/tmp/kepler
 export KEPLER_ORBITS_PUBLIC=true
+export RUST_LOG=INFO
 ```
 
 5b. __Optional__: choose some alternative ports for kepler to use if the default ones clash with something else running on your machine:
@@ -65,13 +77,22 @@ export KEPLER_RELAY_PORT=5000
 ```bash
 cargo run
 ```
+Note: on a fresh WSL2 instance or other minimal Linux installations you may get an error when trying to build Kepler about missing `pkg-config` or `openssl`. You should be able to resolve this by installing both, i.e.
+```bash
+sudo apt-get update
+sudo apt-get install pkg-config openssl
+# Try again
+cargo run
+```
 
 
 ### Step 2: Running the Dapp.
+At this point you should have Kepler running in a shell. You should now open a new shell window (or WSL instance) to run the Dapp from.
+
 
 1. Browse to a suitable directory on your machine, clone Kepler-Dapp and change to that directory.
 ```bash
-git clone git@github.com:spruceid/kepler-dapp.git
+git clone https://github.com/spruceid/kepler-dapp.git
 cd kepler-dapp
 ```
 
@@ -80,7 +101,9 @@ cd kepler-dapp
 git checkout feat/siwe-kepler-quickstart
 ```
 
-3. To avoid requests being blocked by your browser's CORS policy, you will need to add an network alias for the loopback address. Make up a domain name, and add a new entry to your hosts file (`/etc/hosts` on Unix, `\WINDOWS\system32\drivers\etc\hosts` on Windows).
+3. __NOTE__: if you are using WSL you should skip this step.
+
+To avoid requests being blocked by your browser's CORS policy, you will need to add an network alias for the loopback address. Make up a domain name, and add a new entry to your hosts file (`/etc/hosts` on Unix, `C:\WINDOWS\system32\drivers\etc\hosts` on Windows).
 ```
 #For example you could add this line to the bottom of your hosts file:
 127.0.0.1	test.mydomain.com
@@ -89,6 +112,8 @@ git checkout feat/siwe-kepler-quickstart
 4. Set the below environment variable to point to your running Kepler application, using the domain name you chose above and the Kepler port (default is 8000).
 ```bash
 export KEPLER_URLS=http://test.mydomain.com:8000
+# WSL users: if you skipped the above step, then run this instead:
+export KEPLER_URLS=http://localhost:8000
 ```
 
 5. Install the dependencies and run the Dapp!
