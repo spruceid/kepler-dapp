@@ -125,7 +125,7 @@ yarn run dev
 
 ### Step 3: Using the Dapp.
 
-1. Open the Dapp in your browser, at http://test.mydomain.com:9080/index.html unless you chose a different domain name above. Be patient as this may take a couple of minutes to load the first time.
+1. Open the Dapp in your browser, at http://localhost:9080/index.html unless you chose a different domain name above. Be patient as this may take a couple of minutes to load the first time.
 
 2. Click the 'Launch App' button in the top right corner. The Dapp page will open.
 
