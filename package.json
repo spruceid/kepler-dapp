@@ -47,7 +47,7 @@
     "filesize": "^8.0.3",
     "fuse.js": "^6.4.6",
     "https-browserify": "^1.0.0",
-    "kepler-sdk": "git://github.com/spruceid/kepler-sdk.git#15c6fafc596997cd801c11ee12a3660f06f12c96",
+    "kepler-sdk": "git://github.com/spruceid/kepler-sdk.git#feat/siwe-kepler-quickstart",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
     "rfc4648": "^1.5.0",
