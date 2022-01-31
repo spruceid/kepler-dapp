@@ -51,7 +51,7 @@ wallet.subscribe((w) => {
     return;
   }
 
-  w.getAddress().then(account => walletData.set({ account }))
+  w.getAddress().then(account => walletData.set({ account: `${account.slice(0,5)} ... ${account.slice(-4)}` }))
 });
 
 export const kepler = writable<S3>(null);

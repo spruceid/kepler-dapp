@@ -14,12 +14,11 @@
   };
 </script>
 
-<div class="flex flex-col items-center border-r py-9 lg:w-64 border-gray-650">
-  <FullLogo class="w-64 px-10" />
+<div class="step-2 pb-2 pt-7 px-11 rounded-2xl border-green border max-w-125 w-full mx-auto flex flex-col">
   <Button
-    class="mx-10 mt-10"
-    fluid
+    class="mx-auto"
     text="Create new orbit"
     onClick={createNewOrbit}
   />
+  <p class="font-normal text-sm tracking-wide text-white mb-2.5 text-center pt-4">Create your first Orbit to get started</p>
 </div>

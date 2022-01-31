@@ -7,19 +7,11 @@
   export let title: string = '';
   export let onClick: (() => void) | null;
   export let disabled: boolean = false;
-  export let fluid: boolean = false;
   export let opacity: boolean = false;
-  export let secondary: boolean = false;
-  export let mini: boolean = false;
 </script>
 
 <button
-  class={`dark:hover:bg-opacity-90 rounded-lg px-6 transition duration-300 ease-in-out ${clazz}`}
-  class:dark:bg-purple={!secondary}
-  class:dark:bg-cyan={secondary}
-  class:flex={fluid}
-  class:py-2={mini}
-  class:py-4={!mini}
+  class={`rounded-xl border-green border px-6 py-3 h-10 flex items-center justify-center text-center transition duration-300 ease-in-out bg-gray ${clazz}`}
   class:opacity-20={opacity}
   class:opacity-50={disabled}
   class:cursor-not-allowed={disabled}

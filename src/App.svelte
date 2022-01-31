@@ -22,7 +22,7 @@
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
-    @apply dark:text-white;
+    @apply text-white font-satoshi;
   }
 
   h1,
@@ -32,7 +32,7 @@
   h5,
   h6 {
     @apply font-extrabold;
-    @apply dark:text-white;
+    @apply text-white;
     @apply font-satoshi;
   }
 

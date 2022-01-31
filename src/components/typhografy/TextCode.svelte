@@ -23,7 +23,7 @@
 <div class="flex flex-row items-center">
   <p
     title={value}
-    class={`${clazz} inline-block px-2 bg-gray-700 text-base dark:text-white font-inconsolata rounded-md`}
+    class={`${clazz} inline-block px-2 bg-gray-700 text-base text-white font-inconsolata rounded-md`}
   >
     {shorter}
   </p>

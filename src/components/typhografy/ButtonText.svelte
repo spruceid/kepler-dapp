@@ -4,6 +4,6 @@
   export let value: string;
 </script>
 
-<span class={`dark:text-white text-sm font-satoshi font-bold ${clazz}`}>
+<span class={`text-white text-sm font-satoshi font-bold ${clazz}`}>
   {value}
 </span>
