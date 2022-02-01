@@ -9,12 +9,15 @@
     await createOrbit(token);
   };
 
+  export let handleNextStep: (() => void) | null;
+
   const createNewOrbit = async () => {
       await createOrbit();
+      handleNextStep();
   };
 </script>
 
-<div class="step-2 pb-2 pt-7 px-11 rounded-2xl border-green border max-w-125 w-full mx-auto flex flex-col">
+<div class="pb-2 pt-7 px-11 rounded-2xl border-green border max-w-125 w-full mx-auto flex flex-col">
   <Button
     class="mx-auto"
     text="Create new orbit"

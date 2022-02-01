@@ -70,7 +70,7 @@
           <SettingsIcon class="pointer-events-none" />
         </div>
         <div class="popup-body absolute right-0 top-12 py-1 rounded-xl border-green border text-sm font-bold min-w-38.5 bg-gray text-left z-20 flex-col flex hidden">
-          <a href="#" target="_blank" class="px-3.5 py-2 text-white flex w-full">About</a>
+          <a href="#temporary-link" target="_blank" class="px-3.5 py-2 text-white flex w-full">About</a>
           <button class="px-3.5 py-2 text-white flex w-full" on:click|preventDefault={disconnect}>Disconnect</button>
         </div>
         <div class="w-screen h-screen fixed top-0 left-0 z-10 popup-overlay hidden" on:click|preventDefault={handleCloseSettingsPopup}></div>

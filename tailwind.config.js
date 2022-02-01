@@ -10,6 +10,7 @@ module.exports = {
     extend: {
       padding: {
         30: '7.5rem', // 120px
+        42: '10.5rem', // 168px
       },
       lineHeight: {
         16: '4rem'
@@ -46,6 +47,7 @@ module.exports = {
       },
       minWidth: {
         '72': '18rem',
+        26:'6.5rem', // 104px
         '38.5': '9.625rem', // 154px
       },
       minHeight: {
@@ -58,7 +60,8 @@ module.exports = {
       },
       height: {
         'fit-content': 'fit-content',
-        '15': '3.75rem'
+        '15': '3.75rem',
+        '10.5': '2.625rem', // 42px
       },
       fontFamily: {
         'poppins': ['Poppins'],

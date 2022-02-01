@@ -120,6 +120,13 @@
   tr.hover-show:hover td div div.hover-show {
     visibility: visible;
   }
+	
+	.tab-list .selected {
+		@apply bg-green;
+	}
+  .tab-list button {
+    @apply rounded-2xl text-white h-10.5 py-2 px-5 flex items-center justify-center min-w-26;
+  }
 </style>
 
 <script lang="ts">
@@ -131,7 +138,7 @@
 </script>
 
 <CaptchaModal />
-<FileUploadModal />
+<!-- <FileUploadModal /> -->
 
 <Router basepath={basepath}>
   <Route path="/index.html">

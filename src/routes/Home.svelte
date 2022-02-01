@@ -1,68 +1,69 @@
 <script lang="ts">
-  import { onDestroy } from 'svelte';
-  import { get } from 'svelte/store';
-  import { useNavigate } from 'svelte-navigator';
   import {
-    Button,
-    BasePage,
-    Table,
-    FileInfo,
-    FileActions,
-    IconButton,
-    RefreshIcon,
-    UploadIcon,
-    FileStatus,
-    TextCode,
-    TextField,
-    SearchIcon,
-    FilterIcon,
+    onDestroy
+  } from 'svelte';
+  import {
+    get
+  } from 'svelte/store';
+  import {
+    useNavigate
+  } from 'svelte-navigator';
+  import {
+    Button, BasePage, Table, FileInfo, FileActions, IconButton, RefreshIcon, UploadIcon, FileStatus, TextCode, TextField, SearchIcon, FilterIcon, Tabs, TabList, TabPanel, Tab,
   } from 'components';
   import {
-    files,
-    uploadToKepler,
-    fetchAllUris,
-    FileListEntry,
+    files, uploadToKepler, fetchAllUris, FileListEntry,
   } from 'src/store';
-  import type { TableColumn } from 'src/types';
+  import type {
+    TableColumn
+  } from 'src/types';
   import filesize from 'filesize';
-  import { sortBy } from 'lodash';
+  import {
+    sortBy
+  } from 'lodash';
   import Fuse from 'fuse.js';
 
-  import { fileUpload } from 'src/file-upload';
-  import type { FileUpload } from 'src/file-upload';
+  import FileUpload from 'src/modals/FileUpload.svelte';
 
   const navigate = useNavigate();
 
-  const upload = async () => {
-    fileUpload.set({
-      title: 'Upload to Orbit',
-      callback: async (data) => {
-        try {
-          await uploadToKepler(data);
-        } catch (e) {
-          console.error(e);
-        }
-      },
-    });
+  const submit = async (value: any) => {
+    try {
+        await uploadToKepler(value);
+      } catch (e) {
+        console.error(e);
+      };
   };
 
-  const tableColumns: Array<TableColumn> = [
-    {
-      header: { title: 'Name', id: 'name' },
+  const tableColumns: Array < TableColumn > = [{
+      header: {
+        title: 'Name',
+        id: 'name'
+      },
       path: 'name',
     },
     {
-      header: { title: 'Size', id: 'size' },
+      header: {
+        title: 'Size',
+        id: 'size'
+      },
       path: 'size',
       transform: (content: number, _) => filesize(content),
     },
     {
-      header: { title: 'Type', id: 'type', allowSorting: false },
+      header: {
+        title: 'Type',
+        id: 'type',
+        allowSorting: false
+      },
       path: 'type',
       transform: (content) => content.toUpperCase(),
     },
     {
-      header: { title: 'Created', id: 'created' },
+      header: {
+        title: 'Created',
+        id: 'created'
+      },
       path: 'createdAt',
       transform: (content: Date, _) =>
         content.toLocaleString(undefined, {
@@ -72,7 +73,10 @@
         }),
     },
     {
-      header: { title: 'Status', id: 'status' },
+      header: {
+        title: 'Status',
+        id: 'status'
+      },
       path: 'status',
       options: (status) => ({
         status,
@@ -80,7 +84,11 @@
       component: FileStatus,
     },
     {
-      header: { title: 'Actions', id: 'actions', allowSorting: false },
+      header: {
+        title: 'Actions',
+        id: 'actions',
+        allowSorting: false
+      },
       path: 'name',
       options: (name) => ({
         name,
@@ -122,8 +130,15 @@
   };
 
   const allFilters = (
-    files,
-    { search: { instance, query }, filter: { type } }
+    files, {
+      search: {
+        instance,
+        query
+      },
+      filter: {
+        type
+      }
+    }
   ) => {
     let ret = files;
 
@@ -150,23 +165,24 @@
 </script>
 
 <BasePage>
-  <div class="z-10 flex flex-row items-center mb-6">
-    <div class="flex-grow text-2xl font-bold body">My Storage</div>
-    <IconButton icon={RefreshIcon} onClick={fetchAllUris} />
-    <IconButton icon={UploadIcon} onClick={upload} />
-  </div>
 
-  <div class="flex flex-row items-center justify-between mb-6">
-    <IconButton mini icon={FilterIcon} onClick={toggleFilterSection} />
-    <TextField
-      icon={SearchIcon}
-      name="search"
-      placeholder="Search files..."
-      onInput={onSearchInput}
-    />
-  </div>
+  <Tabs>
+    <TabList>
+      <Tab>Upload</Tab>
+      <Tab>Files</Tab>
+    </TabList>
 
-  {#if filterSection}
+    <TabPanel>
+      <FileUpload title="Upload to Orbit" onSubmit={submit} />
+    </TabPanel>
+
+    <TabPanel>
+      <div class="flex flex-row items-center justify-between mb-6">
+        <IconButton mini icon={FilterIcon} onClick={toggleFilterSection} />
+        <TextField icon={SearchIcon} name="search" placeholder="Search files..." onInput={onSearchInput} />
+      </div>
+
+    {#if filterSection}
     <div class="px-4 py-2 mb-6 border-2 border-gray-800 rounded-md">
       <div class="text-lg text-gray-400">Filter by File Type</div>
       <div
@@ -196,4 +212,6 @@
   />
 
   <FileInfo bind:toggle={toggleFileInfo} />
+    </TabPanel>
+  </Tabs>
 </BasePage>
