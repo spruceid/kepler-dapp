@@ -3,7 +3,7 @@
   import { captcha } from 'src/captcha';
   import filesize from 'filesize';
 
-  export let title: string;
+  // export let title: string;
   export let onSubmit: (data: any) => void;
 
   let files = [];
@@ -37,30 +37,23 @@
   };
 </script>
 
-<div
-  class="absolute z-30 flex items-center justify-center w-full h-full bg-gray-900 bg-opacity-75"
->
-  <div class="flex flex-col px-16 py-8 bg-gray-900 rounded-lg bg">
-    <h5>{title}</h5>
+<div class="flex flex-col w-full h-full">
 
-    <div
-      class="p-2 mt-8 bg-white bg-opacity-5"
-      class:bg-opacity-5={!active}
-      class:bg-opacity-50={active}
-      ondragover="return false"
-      on:dragenter|stopPropagation|preventDefault={setActive}
-      on:dragleave|stopPropagation|preventDefault={setInactive}
-      on:drop|stopPropagation|preventDefault={onDrop}
-    >
-      <div class="p-2 border-4 border-white border-dashed border-opacity-50">
-        {#if count === 0}
-          <div class="px-32 py-16">
-            <CloudUpload class="w-32 h-32 mx-auto text-white text-opacity-75" />
-            <div class="opacity-75">
+  <div class="mt-5.5"
+    class:bg-opacity-5={!active}
+    class:bg-opacity-50={active}
+    ondragover="return false"
+    on:dragenter|stopPropagation|preventDefault={setActive}
+    on:dragleave|stopPropagation|preventDefault={setInactive}
+    on:drop|stopPropagation|preventDefault={onDrop}>
+      {#if count === 0}
+        <div class="border-2 border-green border-dotted min-h-70 flex flex-col items-center justify-center text-center border-opacity-75">
+          <div class="p-2 flex flex-col">
+            <div class="flex items-center">
+              <TextBody1 class="inline-block" value="Drag files or " />
               <label class="inline-block cursor-pointer" for="file-upload">
-                <TextBody1 class="font-bold" value="Choose a file" />
+                <TextBody1 class="font-bold" value="click to add" />
               </label>
-              <TextBody1 class="inline-block" value=" or drag it here." />
               <input
                 class="hidden"
                 type="file"
@@ -70,62 +63,53 @@
                 multiple
               />
             </div>
+            <p class="text-gray-1 tracking-wide font-bold text-xs mt-1">(25 MB Limit)</p>
           </div>
-        {:else}
-          <div class="p-4">
-            <div class="flex flex-col">
-              <div class="flex flex-row items-center px-16 mb-4 opacity-75">
-                <CloudUpload class="w-8 h-8 mr-2 text-white text-opacity-75" />
-                <div>
-                  <label class="inline-block cursor-pointer" for="file-upload">
-                    <TextBody1 class="font-bold" value="Choose another file" />
-                  </label>
-                  <TextBody1 class="inline-block" value=" or drag more here." />
-                  <input
-                    class="hidden"
-                    type="file"
-                    id="file-upload"
-                    name="file-upload"
-                    on:change={onInput}
-                    multiple
-                  />
-                </div>
-              </div>
+        </div>
+      {:else}
+        <div class="p-2">
+          <div class="flex flex-col overflow-y-auto max-h-78">
+            <div class="flex flex-wrap items-center justify-center text-center px-2 sm:px-10 py-1 mb-2.5 border-2 border-dotted min-h-10 border-green">
+              <label class="inline-block cursor-pointer" for="file-upload">
+                <TextBody1 class="font-bold" value="Choose another file" />
+              </label>
+              <TextBody1 class="inline-block" value=" or drag more here." />
+              <input
+                class="hidden"
+                type="file"
+                id="file-upload"
+                name="file-upload"
+                on:change={onInput}
+                multiple
+              />
+            </div>
 
-              <div class="flex flex-col">
-                {#each files as file, i}
-                  <div
-                    class="flex flex-row items-center px-4 py-2 rounded-lg hover:bg-black hover:bg-opacity-10"
+            <div class="flex flex-col ">
+              {#each files as file, i}
+                <div class="flex flex-row items-center pl-1 pr-4 py-2.5">
+                  <span class="flex-grow text-sm tracking-wide font-satoshi break-all w-8/12 pr-3">{file.name}</span>
+                  <span class="flex-grow-0 w-2/12 text-xs">{filesize(file.size)}</span>
+                  <span
+                    class="flex-grow-0 ml-4 flex items-center justify-center cursor-pointer w-2/12"
+                    on:click={() => remove(i)}
                   >
-                    <span class="flex-grow">{file.name}</span>
-                    <span class="flex-grow-0">{filesize(file.size)}</span>
-                    <span
-                      class="flex-grow-0 ml-4 cursor-pointer"
-                      on:click={() => remove(i)}
-                    >
-                      <TrashIcon class="w-4 h-4" />
-                    </span>
-                  </div>
-                {/each}
-              </div>
+                    <TrashIcon class="w-6 h-6 p-1.5 border border-green rounded-full" />
+                  </span>
+                </div>
+              {/each}
             </div>
           </div>
-        {/if}
-      </div>
-    </div>
+        </div>
+      {/if}
+  </div>
 
-    <div class="flex flex-row mt-8">
-      <Button text="Cancel" onClick={() => {}} mini class="w-full uppercase" />
+  <div class="mx-auto mt-auto">
 
-      <div class="w-8" />
-
-      <Button
-        text={count > 0 ? `Upload ${count} file(s)` : 'Upload'}
-        disabled={count === 0}
-        onClick={() => onSubmit(files)}
-        mini
-        class="w-full uppercase"
-      />
-    </div>
+    <Button
+      text={count > 0 ? `Upload ${count} file(s)` : 'Upload'}
+      disabled={count === 0}
+      onClick={() => onSubmit(files)}
+      class="min-w-38.5"
+    />
   </div>
 </div>

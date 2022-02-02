@@ -54,9 +54,11 @@
   </div>
   <div class="w-10/12 flex items-center justify-end">
     <div class="flex items-center space-x-4">
-      <Discord />
-      <GitHub />
-      <Twitter />
+      <div class="hidden sm:flex items-center space-x-4">
+        <Discord />
+        <GitHub />
+        <Twitter />
+      </div>
       {#if $walletData}
         <span class="flex flex-grow"></span>
         <span class="rounded-xl border-green border px-3 py-3 h-10 flex items-center justify-center text-center text-sm font-bold text-white">

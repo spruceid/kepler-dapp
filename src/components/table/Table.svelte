@@ -50,7 +50,7 @@
 </script>
 
 {#if elements.length > 0}
-  <div class="min-w-full {!fluid ? 'overflow-y-auto' : ''} {clazz}">
+  <div class="min-w-full max-h-94.5 {!fluid ? 'overflow-y-auto' : ''} {clazz}">
     <table class="min-w-full border-collapse">
       {#if headers != null && headers.length > 0}
         <thead class="sticky top-0 z-20">
@@ -139,5 +139,5 @@
     </table>
   </div>
 {:else}
-  <p class="min-w-full mt-8 mb-8">No items available</p>
+  <p class="min-w-full my-6">You haven't uploaded anything yet.</p>
 {/if}

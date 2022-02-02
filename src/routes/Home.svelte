@@ -177,9 +177,9 @@
     </TabPanel>
 
     <TabPanel>
-      <div class="flex flex-row items-center justify-between mb-6">
-        <IconButton mini icon={FilterIcon} onClick={toggleFilterSection} />
+      <div class="flex flex-row items-center justify-between mt-5.5">
         <TextField icon={SearchIcon} name="search" placeholder="Search files..." onInput={onSearchInput} />
+        <IconButton icon={FilterIcon} onClick={toggleFilterSection} class="ml-4 flex items-center justify-center" />
       </div>
 
     {#if filterSection}

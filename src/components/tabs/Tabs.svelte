@@ -45,6 +45,6 @@
 	});
 </script>
 
-<div class="tabs">
+<div class="tabs flex flex-col h-full">
 	<slot></slot>
 </div>

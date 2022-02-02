@@ -17,7 +17,7 @@
   };
 </script>
 
-<div class="pb-2 pt-7 px-11 rounded-2xl border-green border max-w-125 w-full mx-auto flex flex-col">
+<div class="pb-2 pt-7 px-4 sm:px-11 rounded-2xl border-green border max-w-125 w-full mx-auto flex flex-col">
   <Button
     class="mx-auto"
     text="Create new orbit"

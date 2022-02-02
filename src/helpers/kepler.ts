@@ -6,6 +6,7 @@ export const addToKepler = async (
   obj: Blob
 ) => {
   // obj.forEach((o) => console.log(o));
+  console.log(kepler, key, obj)
   if (kepler) {
     // Get around the error of possibly passing nothing.
     const res = await kepler.put(key, obj, {});

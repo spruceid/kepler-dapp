@@ -11,9 +11,10 @@
 </script>
 
 <button
-  class={`rounded-xl border-green border px-6 py-3 h-10 flex items-center justify-center text-center transition duration-300 ease-in-out bg-gray ${clazz}`}
+  class={`rounded-xl border-green border px-6 py-3 h-10 flex items-center justify-center text-center transition duration-300 ease-in-out bg-gray hover:bg-green ${clazz}`}
   class:opacity-20={opacity}
   class:opacity-50={disabled}
+  class:border-gray-1={disabled}
   class:cursor-not-allowed={disabled}
   on:click|preventDefault={disabled ? null : onClick}
   aria-label={title}

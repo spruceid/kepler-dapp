@@ -14,7 +14,8 @@
   body {
     position: relative;
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
+    height: 100%;
     margin: 0px;
     padding: 0px;
     font-size: 16px;
@@ -126,6 +127,9 @@
 	}
   .tab-list button {
     @apply rounded-2xl text-white h-10.5 py-2 px-5 flex items-center justify-center min-w-26;
+  }
+  input::focus {
+    outline: none!important;
   }
 </style>
 

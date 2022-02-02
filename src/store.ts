@@ -98,7 +98,7 @@ const addToKepler = async (
 ): Promise<string> => {
   const localWallet = get(wallet);
   const localKepler = get(kepler);
-
+  console.log(localKepler, localWallet)
   if (!localWallet || !localKepler) {
     return;
   }
@@ -319,6 +319,7 @@ export const fetchAllUris = async () => {
 };
 
 export const uploadToKepler = async (files: Array<File>) => {
+  console.log(files)
   await Promise.all(files.map(async file => console.log(await addToKepler(file.name, file))))
 
   await fetchAllUris();
