@@ -50,11 +50,11 @@
 </script>
 
 {#if elements.length > 0}
-  <div class="min-w-full max-h-94.5 {!fluid ? 'overflow-y-auto' : ''} {clazz}">
+  <div class="min-w-full max-h-94.5 mt-8 {!fluid ? 'overflow-y-auto' : ''} {clazz}">
     <table class="min-w-full border-collapse">
       {#if headers != null && headers.length > 0}
-        <thead class="sticky top-0 z-20">
-          <tr class="border-b border-gray-650 bg-gray">
+        <thead class="sticky -top-px z-20 bg-gray">
+          <tr class="bg-gray">
             {#each headers as header}
               {#if header?.options?.override}
                 <th {...header.options}>
@@ -76,7 +76,7 @@
                 </th>
               {:else}
                 <th
-                  class={`text-gray-500 font-medium text-sm text-left px-3 py-6 sticky top-0 z-20 ${
+                  class={`text-gray-1 font-medium text-sm text-left px-2 py-2.5 sticky top-0 z-20 ${
                     header?.options?.class ?? ''
                   }`}
                 >
@@ -104,12 +104,12 @@
       <tbody>
         {#each sortedElements as object, rowIndex}
           <tr
-            class="text-sm border-b border-gray-650 hover:bg-purple hover:bg-opacity-10 transition-all ease-in-out duration-200 hover-show"
+            class="text-sm transition-all ease-in-out duration-200 hover-show"
             class:cursor-pointer={onRowClick != null}
             on:click={() => onRowClick(object, rowIndex)}
           >
             {#each columns as column}
-              <td class="px-3 py-5">
+              <td class="px-2 py-2.5 break-all">
                 {#if column.component != null}
                   <svelte:component
                     this={column.component}

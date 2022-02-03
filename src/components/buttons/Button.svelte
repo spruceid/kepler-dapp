@@ -16,6 +16,7 @@
   class:opacity-50={disabled}
   class:border-gray-1={disabled}
   class:cursor-not-allowed={disabled}
+  class:pointer-events-none={disabled}
   on:click|preventDefault={disabled ? null : onClick}
   aria-label={title}
   {disabled}

@@ -9,8 +9,9 @@
     useNavigate
   } from 'svelte-navigator';
   import {
-    Button, BasePage, Table, FileInfo, FileActions, IconButton, RefreshIcon, UploadIcon, FileStatus, TextCode, TextField, SearchIcon, FilterIcon, Tabs, TabList, TabPanel, Tab,
+    Button, BasePage, Table, FileInfo, FileActions, IconButton, RefreshIcon, UploadIcon, FileStatus, TextCode, TextField, SearchIcon, FilterIcon, Tabs, TabList, TabPanel, Tab, Toast
   } from 'components';
+
   import {
     files, uploadToKepler, fetchAllUris, FileListEntry,
   } from 'src/store';
@@ -25,11 +26,14 @@
 
   import FileUpload from 'src/modals/FileUpload.svelte';
 
+  import { notifications } from 'src/helpers/notifications';
+
   const navigate = useNavigate();
 
   const submit = async (value: any) => {
     try {
         await uploadToKepler(value);
+        notifications.info('Upload Complete', 4000)
       } catch (e) {
         console.error(e);
       };
@@ -37,52 +41,52 @@
 
   const tableColumns: Array < TableColumn > = [{
       header: {
-        title: 'Name',
+        title: 'Uploaded Files',
         id: 'name'
       },
       path: 'name',
     },
-    {
-      header: {
-        title: 'Size',
-        id: 'size'
-      },
-      path: 'size',
-      transform: (content: number, _) => filesize(content),
-    },
-    {
-      header: {
-        title: 'Type',
-        id: 'type',
-        allowSorting: false
-      },
-      path: 'type',
-      transform: (content) => content.toUpperCase(),
-    },
-    {
-      header: {
-        title: 'Created',
-        id: 'created'
-      },
-      path: 'createdAt',
-      transform: (content: Date, _) =>
-        content.toLocaleString(undefined, {
-          day: 'numeric',
-          month: 'numeric',
-          year: 'numeric',
-        }),
-    },
-    {
-      header: {
-        title: 'Status',
-        id: 'status'
-      },
-      path: 'status',
-      options: (status) => ({
-        status,
-      }),
-      component: FileStatus,
-    },
+    // {
+    //   header: {
+    //     title: 'Size',
+    //     id: 'size'
+    //   },
+    //   path: 'size',
+    //   transform: (content: number, _) => filesize(content),
+    // },
+    // {
+    //   header: {
+    //     title: 'Type',
+    //     id: 'type',
+    //     allowSorting: false
+    //   },
+    //   path: 'type',
+    //   transform: (content) => content.toUpperCase(),
+    // },
+    // {
+    //   header: {
+    //     title: 'Created',
+    //     id: 'created'
+    //   },
+    //   path: 'createdAt',
+    //   transform: (content: Date, _) =>
+    //     content.toLocaleString(undefined, {
+    //       day: 'numeric',
+    //       month: 'numeric',
+    //       year: 'numeric',
+    //     }),
+    // },
+    // {
+    //   header: {
+    //     title: 'Status',
+    //     id: 'status'
+    //   },
+    //   path: 'status',
+    //   options: (status) => ({
+    //     status,
+    //   }),
+    //   component: FileStatus,
+    // },
     {
       header: {
         title: 'Actions',

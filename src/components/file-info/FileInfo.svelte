@@ -53,20 +53,20 @@
 {#if visible}
   <div
     transition:fly={{ easing: quintOut, x: 384, opacity: 1.0 }}
-    class="absolute right-0 top-0 bottom-0 z-20 bg-gray-primary-03"
+    class="fixed right-0 top-0 bottom-0 z-20 bg-gray border-l border-green"
   >
     <div class="flex flex-grow flex-col p-10 w-96">
       <div class="flex flex-grow flex-row mb-10">
         <p class="font-bold text-lg">Dummy name</p>
       </div>
 
-      <div class="w-full h-48 bg-blue-900 rounded-md mb-10" />
+      <div class="w-full h-48 bg-green rounded-md mb-10" />
 
       {#each attributes as attribute}
         <div
-          class="flex flex-grow flex-row justify-between border-b border-gray-650 font-medium text-sm text-left px-3 py-6"
+          class="flex flex-grow flex-row justify-between border-b border-green font-medium text-sm text-left px-2 py-4"
         >
-          <p class="text-gray-500">{attribute.label}</p>
+          <p class="text-gray-1">{attribute.label}</p>
           <p>{attribute.value}</p>
         </div>
       {/each}

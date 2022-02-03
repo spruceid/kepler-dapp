@@ -14,3 +14,4 @@ export { default as SettingsIcon } from './SettingsIcon.svelte';
 export { default as TrashIcon } from './TrashIcon.svelte';
 export { default as Twitter } from './Twitter.svelte';
 export { default as UploadIcon } from './UploadIcon.svelte';
+export { default as CheckArrow } from './CheckArrow.svelte';

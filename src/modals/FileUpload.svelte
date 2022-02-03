@@ -69,7 +69,7 @@
       {:else}
         <div class="p-2">
           <div class="flex flex-col overflow-y-auto max-h-78">
-            <div class="flex flex-wrap items-center justify-center text-center px-2 sm:px-10 py-1 mb-2.5 border-2 border-dotted min-h-10 border-green">
+            <div class="flex flex-wrap items-center justify-center text-center px-2 sm:px-10 py-2 mb-2.5 border-2 border-dotted border-green">
               <label class="inline-block cursor-pointer" for="file-upload">
                 <TextBody1 class="font-bold" value="Choose another file" />
               </label>
@@ -87,13 +87,13 @@
             <div class="flex flex-col ">
               {#each files as file, i}
                 <div class="flex flex-row items-center pl-1 pr-4 py-2.5">
-                  <span class="flex-grow text-sm tracking-wide font-satoshi break-all w-8/12 pr-3">{file.name}</span>
+                  <span class="flex-grow text-sm tracking-wide break-all w-8/12 pr-3">{file.name}</span>
                   <span class="flex-grow-0 w-2/12 text-xs">{filesize(file.size)}</span>
                   <span
                     class="flex-grow-0 ml-4 flex items-center justify-center cursor-pointer w-2/12"
                     on:click={() => remove(i)}
                   >
-                    <TrashIcon class="w-6 h-6 p-1.5 border border-green rounded-full" />
+                    <TrashIcon class="w-7 h-7 p-1.5 border border-green rounded-full" />
                   </span>
                 </div>
               {/each}

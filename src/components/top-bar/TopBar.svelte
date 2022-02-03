@@ -68,7 +68,7 @@
         <Button text="Connect Wallet" onClick={connect} />
       {/if}
       <div class="relative popup">
-        <div class="rounded-xl border-green border px-3 py-3 h-10 flex items-center justify-center text-center bg-gray z-10" on:click|preventDefault={handleOpenSettingsPopup}>
+        <div class="rounded-xl border-green border px-3 py-3 h-10 flex items-center justify-center text-center bg-gray z-10 cursor-pointer" on:click|preventDefault={handleOpenSettingsPopup}>
           <SettingsIcon class="pointer-events-none" />
         </div>
         <div class="popup-body absolute right-0 top-12 py-1 rounded-xl border-green border text-sm font-bold min-w-38.5 bg-gray text-left z-20 flex-col flex hidden">

@@ -8,6 +8,9 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      inset: {
+        '17.5': '4.375rem', // 70px
+      },
       padding: {
         30: '7.5rem', // 120px
         42: '10.5rem', // 168px

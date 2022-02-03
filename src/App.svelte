@@ -139,6 +139,7 @@
 
   import { CaptchaModal, FileUploadModal } from 'src/modals';
   export let basepath = '/';
+  
 </script>
 
 <CaptchaModal />

@@ -10,3 +10,4 @@ export * from './file/';
 export * from './allowlist-captcha/';
 export * from './form/';
 export * from './tabs/';
+export * from './notifications/';

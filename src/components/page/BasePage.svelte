@@ -3,7 +3,9 @@
     Drawer,
     TopBar,
     Logo,
-    Button
+    Button,
+    CheckArrow,
+    Toast
   } from 'components';
 
   let step = 1;
@@ -13,7 +15,7 @@
 </script>
 
 <TopBar />
-<div class="flex flex-col items-center py-24 sm:py-42 px-4 sm:px-0 w-full h-full dark:bg-gray flex-grow">
+<div class="flex flex-col items-center py-24 sm:py-42 px-4 sm:px-0 w-full dark:bg-gray flex-grow">
   {#if step === 1}
     <div class="step-1 pb-6 sm:pb-9 pt-5 sm:pt-8 px-4 sm:px-11 rounded-2xl border-green border max-w-125 w-full mx-auto flex flex-col min-h-144.5">
       <div class="flex flex-col">
@@ -37,3 +39,5 @@
     </div>
   {/if}
 </div>
+
+<Toast />
