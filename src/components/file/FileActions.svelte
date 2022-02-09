@@ -25,7 +25,7 @@
     on:click|stopPropagation={onDownload}
   >
     <DownloadIcon
-      class="w-6 h-6 sm:w-7 sm:h-7 p-1.5 rounded-full border border-green text-white transform transition-all duration-100 hover:scale-110 "
+      class="icon-table"
     />
   </div>
 
@@ -35,17 +35,17 @@
     on:click|stopPropagation={onDelete}
   >
     <TrashIcon
-      class="w-6 h-6 sm:w-7 sm:h-7 p-1.5 rounded-full border border-green text-white transform transition-all duration-100 hover:scale-110 "
+      class="icon-table"
     />
   </div>
 
-  <div
+  <!-- <div
     class="onlycursor-pointer"
     title="Share {name}"
     on:click|stopPropagation={onShare}
   >
     <CloudUpload
-      class="w-6 h-6 sm:w-7 sm:h-7 p-1.5 rounded-full border border-green text-white transform transition-all duration-100 hover:scale-110 "
+      class="icon-table"
     />
-  </div>
+  </div> -->
 </div>

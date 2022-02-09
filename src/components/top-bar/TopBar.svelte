@@ -61,21 +61,21 @@
       </div>
       {#if $walletData}
         <span class="flex flex-grow"></span>
-        <span class="rounded-xl border-green border px-3 py-3 h-10 flex items-center justify-center text-center text-sm font-bold text-white">
+        <span class="wallet-data">
           {$walletData.account}
         </span>
         {:else}
         <Button text="Connect Wallet" onClick={connect} />
       {/if}
       <div class="relative popup">
-        <div class="rounded-xl border-green border px-3 py-3 h-10 flex items-center justify-center text-center bg-gray z-10 cursor-pointer" on:click|preventDefault={handleOpenSettingsPopup}>
+        <div class="popup-icon-wrap" on:click|preventDefault={handleOpenSettingsPopup}>
           <SettingsIcon class="pointer-events-none" />
         </div>
-        <div class="popup-body absolute right-0 top-12 py-1 rounded-xl border-green border text-sm font-bold min-w-38.5 bg-gray text-left z-20 flex-col flex hidden">
+        <div class="popup-body flex hidden">
           <a href="#temporary-link" target="_blank" class="px-3.5 py-2 text-white flex w-full">About</a>
           <button class="px-3.5 py-2 text-white flex w-full" on:click|preventDefault={disconnect}>Disconnect</button>
         </div>
-        <div class="w-screen h-screen fixed top-0 left-0 z-10 popup-overlay hidden" on:click|preventDefault={handleCloseSettingsPopup}></div>
+        <div class="popup-overlay hidden" on:click|preventDefault={handleCloseSettingsPopup}></div>
       </div>
     </div>
   </div>

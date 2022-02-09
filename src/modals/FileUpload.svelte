@@ -87,7 +87,7 @@
             <div class="flex flex-col ">
               {#each files as file, i}
                 <div class="flex flex-row items-center pl-1 pr-4 py-2.5">
-                  <span class="flex-grow text-sm tracking-wide break-all w-8/12 pr-3">{file.name}</span>
+                  <span class="flex-grow text-sm tracking-wide truncate w-8/12 pr-3">{file.name}</span>
                   <span class="flex-grow-0 w-2/12 text-xs">{filesize(file.size)}</span>
                   <span
                     class="flex-grow-0 ml-4 flex items-center justify-center cursor-pointer w-2/12"

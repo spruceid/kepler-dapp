@@ -16,8 +16,8 @@
 
 <TopBar />
 <div class="flex flex-col items-center py-24 sm:py-42 px-4 sm:px-0 w-full dark:bg-gray flex-grow">
-  {#if step === 1}
-    <div class="step-1 pb-6 sm:pb-9 pt-5 sm:pt-8 px-4 sm:px-11 rounded-2xl border-green border max-w-125 w-full mx-auto flex flex-col min-h-144.5">
+  <!-- {#if step === 1}
+    <div class="step-wrap">
       <div class="flex flex-col">
         <div class="mx-auto mb-4 sm:mb-10.5">
           <Logo />
@@ -29,12 +29,12 @@
         <Button text="Enter" class='min-w-38.5 mx-auto' onClick={handleNextStep} />
       </div>
     </div>
-  {/if}
-  {#if step === 2}
+  {/if} -->
+  {#if step === 1}
     <Drawer handleNextStep={handleNextStep} />
   {/if}
-  {#if step === 3}
-    <div class="pb-6 sm:pb-9 pt-5 sm:pt-8 px-4 sm:px-11 text-white rounded-2xl border-green border max-w-125 w-full mx-auto flex flex-col min-h-144.5">
+  {#if step === 2}
+    <div class="step-wrap">
       <slot />
     </div>
   {/if}

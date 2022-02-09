@@ -109,7 +109,7 @@
             on:click={() => onRowClick(object, rowIndex)}
           >
             {#each columns as column}
-              <td class="px-2 py-2.5 break-all">
+              <td class="px-2 py-2.5">
                 {#if column.component != null}
                   <svelte:component
                     this={column.component}
@@ -119,7 +119,7 @@
                     )}
                   />
                 {:else}
-                  <div
+                  <div class="truncate max-w-48 sm:max-w-56 w-full"
                     {...column.options?.(
                       get(object, column.path, object),
                       rowIndex
