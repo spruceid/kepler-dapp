@@ -11,6 +11,11 @@
 	const selectedTab = writable(null);
 	const selectedPanel = writable(null);
 
+	export function selectTab(index) {
+		selectedTab.set(tabs[index]);
+		selectedPanel.set(panels[index]);
+	}
+
 	setContext(TABS, {
 		registerTab: tab => {
 			tabs.push(tab);

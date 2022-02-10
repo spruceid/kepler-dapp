@@ -29,11 +29,13 @@
   import { notifications } from 'src/helpers/notifications';
 
   const navigate = useNavigate();
-
+  let filesTabs;
+  
   const submit = async (value: any) => {
     try {
         await uploadToKepler(value);
         notifications.info('Upload Complete', 4000)
+        filesTabs.selectTab(1)
       } catch (e) {
         console.error(e);
       };
@@ -46,47 +48,6 @@
       },
       path: 'name',
     },
-    // {
-    //   header: {
-    //     title: 'Size',
-    //     id: 'size'
-    //   },
-    //   path: 'size',
-    //   transform: (content: number, _) => filesize(content),
-    // },
-    // {
-    //   header: {
-    //     title: 'Type',
-    //     id: 'type',
-    //     allowSorting: false
-    //   },
-    //   path: 'type',
-    //   transform: (content) => content.toUpperCase(),
-    // },
-    // {
-    //   header: {
-    //     title: 'Created',
-    //     id: 'created'
-    //   },
-    //   path: 'createdAt',
-    //   transform: (content: Date, _) =>
-    //     content.toLocaleString(undefined, {
-    //       day: 'numeric',
-    //       month: 'numeric',
-    //       year: 'numeric',
-    //     }),
-    // },
-    // {
-    //   header: {
-    //     title: 'Status',
-    //     id: 'status'
-    //   },
-    //   path: 'status',
-    //   options: (status) => ({
-    //     status,
-    //   }),
-    //   component: FileStatus,
-    // },
     {
       header: {
         title: 'Actions',
@@ -170,7 +131,7 @@
 
 <BasePage>
 
-  <Tabs>
+  <Tabs bind:this={filesTabs}>
     <TabList>
       <Tab>Upload</Tab>
       <Tab>Files</Tab>
