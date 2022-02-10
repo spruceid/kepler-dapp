@@ -43,6 +43,8 @@ const currentTime = readable(new Date(), (set) => {
 
 export const walletData: Writable<{
   account: string;
+  name: string | null;
+  avatar: string | null;
 }> = writable(null);
 
 export const wallet = writable<Signer>(null);
@@ -51,7 +53,21 @@ wallet.subscribe((w) => {
     return;
   }
 
-  w.getAddress().then(account => walletData.set({ account: `${account.slice(0,5)} ... ${account.slice(-4)}` }))
+  w.getAddress().then(account => {
+    walletData.set({ account: `${account.slice(0,5)} ... ${account.slice(-4)}`, name: null, avatar: null})
+    
+    const provider = new providers.EtherscanProvider()
+    provider.lookupAddress(account).then(name => {
+      if(!name) return 
+
+      walletData.set({ account: `${account.slice(0,5)} ... ${account.slice(-4)}`, name, avatar: null});
+
+      provider.getAvatar(name).then(avatar => {
+        if(!avatar) return;
+        walletData.set({ account: `${account.slice(0,5)} ... ${account.slice(-4)}`, name, avatar })
+      })
+    })
+  });
 });
 
 export const kepler = writable<S3>(null);

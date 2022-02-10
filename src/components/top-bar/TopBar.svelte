@@ -62,7 +62,12 @@
       {#if $walletData}
         <span class="flex flex-grow"></span>
         <span class="wallet-data">
-          {$walletData.account}
+          {#if $walletData.name}
+            {$walletData.name}
+            {$walletData.avatar}
+          {:else}
+            {$walletData.account}
+          {/if}
         </span>
         {:else}
         <Button text="Connect Wallet" onClick={connect} />
