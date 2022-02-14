@@ -53,7 +53,7 @@ wallet.subscribe((w) => {
     return;
   }
 
-  w.getAddress().then(account => {
+  w.getAddress().then(async account => {
     walletData.set({ account: `${account.slice(0,5)} ... ${account.slice(-4)}`, name: null, avatar: null})
     
     const provider = new providers.EtherscanProvider()
@@ -64,9 +64,9 @@ wallet.subscribe((w) => {
 
       provider.getAvatar(name).then(avatar => {
         if(!avatar) return;
-        walletData.set({ account: `${account.slice(0,5)} ... ${account.slice(-4)}`, name, avatar })
+        walletData.set({ account: `${account.slice(0,5)} ... ${account.slice(-4)}`, name, avatar})
       })
-    })
+    });
   });
 });
 
@@ -276,6 +276,8 @@ const initKepler = async (): Promise<void> => {
   );
   sessionDoc.signature = await localWallet.signMessage(sessionDoc.toMessage());
 
+  console.log(sessionDoc);
+
   const newKepler = new S3(
     keplerUrls[0],
     oid,
@@ -283,6 +285,8 @@ const initKepler = async (): Promise<void> => {
   );
 
   kepler.set(newKepler);
+  
+  await fetchAllUris();
 };
 
 export const initWallet = async (): Promise<void> => {

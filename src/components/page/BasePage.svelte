@@ -7,6 +7,7 @@
     CheckArrow,
     Toast
   } from 'components';
+  import { kepler } from 'src/store';
 
   let step = 1;
   const handleNextStep = () => {
@@ -30,10 +31,10 @@
       </div>
     </div>
   {/if} -->
-  {#if step === 1}
+  {#if step === 1 && !$kepler}
     <Drawer handleNextStep={handleNextStep} />
   {/if}
-  {#if step === 2}
+  {#if step === 2 || $kepler}
     <div class="step-wrap">
       <slot />
     </div>

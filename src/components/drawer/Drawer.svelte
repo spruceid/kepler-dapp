@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Button } from 'components';
-  import { createOrbit } from 'src/store';
+  import { createOrbit, kepler } from 'src/store';
   import { initWallet, walletData, remainingSessionKeysTime } from 'src/store';
 
   const handleCaptchaResult = async (token) => {
