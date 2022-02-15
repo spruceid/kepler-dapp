@@ -64,7 +64,11 @@
         <span class="wallet-data">
           {#if $walletData.name}
             {$walletData.name}
-            {$walletData.avatar}
+            {#if $walletData.avatar}
+              <img src="{$walletData.avatar}" alt="#">
+            {:else}
+              <img src="/images/siwe-address-icon.png" alt="#">
+            {/if}
           {:else}
             {$walletData.account}
           {/if}
