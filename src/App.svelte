@@ -163,7 +163,7 @@
     @apply rounded-xl border-green border px-3 py-3 h-10 flex items-center justify-center text-center text-sm font-bold text-white;
   }
   .wallet-data img {
-      @apply w-4 h-4 object-contain rounded-full ml-3 object-center;
+      @apply w-4 h-4 object-cover rounded-full ml-3 object-center;
     }
 </style>
 
