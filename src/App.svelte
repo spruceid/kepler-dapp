@@ -180,10 +180,10 @@
 <!-- <FileUploadModal /> -->
 
 <Router basepath={basepath}>
-  <Route path="/index.html">
+  <!-- <Route path="/index.html">
     <Splash />
-  </Route>
-  <Route path="/app">
+  </Route> -->
+  <Route path="/">
     <Home />
   </Route>
 </Router>

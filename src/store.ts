@@ -41,6 +41,10 @@ const currentTime = readable(new Date(), (set) => {
   };
 });
 
+export const stepStore: Writable< {
+  currentStep: number;
+}> = writable(null);
+
 export const walletData: Writable<{
   account: string;
   name: string | null;

@@ -4,7 +4,7 @@
     GitHub,
     Twitter,
     SettingsIcon, } from 'components';
-  import { initWallet, walletData, remainingSessionKeysTime } from 'src/store';
+  import { initWallet, walletData, remainingSessionKeysTime, stepStore } from 'src/store';
   import { providers } from "ethers";
 
   const connect = async () => {
@@ -81,7 +81,7 @@
           <SettingsIcon class="pointer-events-none" />
         </div>
         <div class="popup-body flex hidden">
-          <a href="#temporary-link" target="_blank" class="px-3.5 py-2 text-white flex w-full">About</a>
+          <button class="px-3.5 py-2 text-white flex w-full" on:click|preventDefault={() => stepStore.set({currentStep: 0 })}>About</button>
           <button class="px-3.5 py-2 text-white flex w-full" on:click|preventDefault={disconnect}>Disconnect</button>
         </div>
         <div class="popup-overlay hidden" on:click|preventDefault={handleCloseSettingsPopup}></div>
