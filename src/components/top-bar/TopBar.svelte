@@ -55,9 +55,9 @@
   <div class="w-10/12 flex items-center justify-end">
     <div class="flex items-center space-x-4">
       <div class="hidden sm:flex items-center space-x-4">
-        <Discord />
-        <GitHub />
-        <Twitter />
+        <a href="http://discord.gg/WjvuYqvm5Y" target="_blank"><Discord /></a>
+        <a href="https://github.com/spruceid" target="_blank"><GitHub /></a>
+        <a href="https://twitter.com/spruceid" target="_blank"><Twitter /></a>
       </div>
       {#if $walletData}
         <span class="flex flex-grow"></span>
