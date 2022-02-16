@@ -23,8 +23,8 @@
           <div class="mx-auto mb-4 sm:mb-10.5">
             <Logo />
           </div>
-          <p class="font-normal text-sm tracking-wide text-white mb-2.5">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
-          <p class="font-normal text-sm tracking-wide text-white mb-2.5">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
+          <p class="font-normal text-sm tracking-wide text-white mb-2.5">This is an example dapp using Kepler. First, a user can connect their wallet and sign in with Ethereum to create a new Orbit. As part of the sign in with Ethereum request, the user delegates to a session key which grants permissions to automatically sign for operations around storage to enable an easier UX. Finally, a user can upload files, and then download or delete those files from their Orbit.</p>
+          <p class="font-normal text-sm tracking-wide text-white mb-2.5">Note: this dapp has not undergone any formal audit, and is just an example. It should not be used for production purposes.</p>
         </div>
         <div class="mt-auto">
           <Button text="Enter" class='min-w-38.5 mx-auto' onClick={()=> stepStore.set({ currentStep: 1 })} />
