@@ -41,8 +41,14 @@ const currentTime = readable(new Date(), (set) => {
   };
 });
 
+export const stepStore: Writable< {
+  currentStep: number;
+}> = writable(null);
+
 export const walletData: Writable<{
   account: string;
+  name: string | null;
+  avatar: string | null;
 }> = writable(null);
 
 export const wallet = writable<Signer>(null);
@@ -51,7 +57,21 @@ wallet.subscribe((w) => {
     return;
   }
 
-  w.getAddress().then(account => walletData.set({ account }))
+  w.getAddress().then(async account => {
+    walletData.set({ account: `${account.slice(0,5)} ... ${account.slice(-4)}`, name: null, avatar: null})
+    
+    const provider = new providers.EtherscanProvider()
+    provider.lookupAddress(account).then(name => {
+      if(!name) return 
+
+      walletData.set({ account: `${account.slice(0,5)} ... ${account.slice(-4)}`, name, avatar: null});
+
+      provider.getAvatar(name).then(avatar => {
+        if(!avatar) return;
+        walletData.set({ account: `${account.slice(0,5)} ... ${account.slice(-4)}`, name, avatar})
+      })
+    });
+  });
 });
 
 export const kepler = writable<S3>(null);
@@ -98,7 +118,7 @@ const addToKepler = async (
 ): Promise<string> => {
   const localWallet = get(wallet);
   const localKepler = get(kepler);
-
+  console.log(localKepler, localWallet)
   if (!localWallet || !localKepler) {
     return;
   }
@@ -260,6 +280,8 @@ const initKepler = async (): Promise<void> => {
   );
   sessionDoc.signature = await localWallet.signMessage(sessionDoc.toMessage());
 
+  console.log(sessionDoc);
+
   const newKepler = new S3(
     keplerUrls[0],
     oid,
@@ -267,6 +289,8 @@ const initKepler = async (): Promise<void> => {
   );
 
   kepler.set(newKepler);
+  
+  await fetchAllUris();
 };
 
 export const initWallet = async (): Promise<void> => {
@@ -319,6 +343,7 @@ export const fetchAllUris = async () => {
 };
 
 export const uploadToKepler = async (files: Array<File>) => {
+  console.log(files)
   await Promise.all(files.map(async file => console.log(await addToKepler(file.name, file))))
 
   await fetchAllUris();

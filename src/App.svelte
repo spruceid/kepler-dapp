@@ -14,7 +14,8 @@
   body {
     position: relative;
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
+    height: 100%;
     margin: 0px;
     padding: 0px;
     font-size: 16px;
@@ -22,7 +23,7 @@
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
-    @apply dark:text-white;
+    @apply text-white font-satoshi;
   }
 
   h1,
@@ -32,7 +33,7 @@
   h5,
   h6 {
     @apply font-extrabold;
-    @apply dark:text-white;
+    @apply text-white;
     @apply font-satoshi;
   }
 
@@ -120,6 +121,50 @@
   tr.hover-show:hover td div div.hover-show {
     visibility: visible;
   }
+
+  .tab-list {
+    @apply border border-green rounded-2xl w-fit-content flex items-center justify-center mx-auto;
+  }
+	
+	.tab-list .selected {
+		@apply bg-green;
+	}
+  .tab-list button {
+    @apply rounded-2xl text-white h-10.5 py-2 px-5 flex items-center justify-center min-w-26;
+  }
+  input::focus {
+    outline: none!important;
+  }
+  .text-drawer {
+    @apply font-normal text-sm tracking-wide text-white mb-2.5 text-center pt-4;
+  }
+  .wrapper-orbit {
+    @apply pb-2 pt-7 sm:px-11 px-4 rounded-2xl border-green border max-w-125 w-full mx-auto flex flex-col;
+  }
+  .icon-table {
+    @apply w-6 h-6 sm:w-7 sm:h-7 p-1.5 rounded-full border border-green text-white transform transition-all duration-100 hover:scale-110;
+  }
+  .step-wrap {
+    @apply pb-6 sm:pb-9 pt-5 sm:pt-8 px-4 sm:px-11 text-white rounded-2xl border-green border max-w-125 w-full mx-auto flex flex-col min-h-144.5;
+  }
+  .sort-icon {
+    @apply cursor-pointer transition-all duration-100 transform hover:scale-110;
+  }
+  .popup-body {
+    @apply absolute right-0 top-12 py-1 rounded-xl border-green border text-sm font-bold min-w-38.5 bg-gray text-left z-20 flex-col;
+  }
+  .popup-overlay {
+    @apply w-screen h-screen fixed top-0 left-0 z-10;
+  }
+  .popup-icon-wrap {
+    @apply rounded-xl border-green border px-3 py-3 h-10 flex items-center justify-center text-center bg-gray z-10 cursor-pointer;
+  }
+  .wallet-data {
+    @apply rounded-xl border-green border px-3 py-3 h-10 flex items-center justify-center text-center text-sm font-bold text-white;
+  }
+  .wallet-data img {
+      @apply w-4 h-4 object-cover rounded-full ml-3 object-center;
+    }
 </style>
 
 <script lang="ts">
@@ -128,16 +173,17 @@
 
   import { CaptchaModal, FileUploadModal } from 'src/modals';
   export let basepath = '/';
+  
 </script>
 
 <CaptchaModal />
-<FileUploadModal />
+<!-- <FileUploadModal /> -->
 
 <Router basepath={basepath}>
-  <Route path="/index.html">
+  <!-- <Route path="/index.html">
     <Splash />
-  </Route>
-  <Route path="/app">
+  </Route> -->
+  <Route path="/">
     <Home />
   </Route>
 </Router>

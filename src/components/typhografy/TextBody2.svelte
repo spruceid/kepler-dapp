@@ -4,6 +4,6 @@
   export let value: string;
 </script>
 
-<p class={`${clazz} text-base dark:text-white font-satoshi`}>
+<p class={`${clazz} text-base text-white font-satoshi`}>
   {value}
 </p>

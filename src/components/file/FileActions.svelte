@@ -18,34 +18,34 @@
   };
 </script>
 
-<div class="flex flex-row">
+<div class="flex flex-row space-x-1 sm:space-x-3">
   <div
     class="cursor-pointer"
     title="Download {name}"
     on:click|stopPropagation={onDownload}
   >
     <DownloadIcon
-      class="w-4 h-4 text-white transform transition-all duration-100 hover:scale-110 "
+      class="icon-table"
     />
   </div>
 
   <div
-    class="ml-3 sr-onlycursor-pointer"
+    class="sr-onlycursor-pointer"
     title="Delete {name}"
     on:click|stopPropagation={onDelete}
   >
     <TrashIcon
-      class="w-4 h-4 text-white transform transition-all duration-100 hover:scale-110 "
+      class="icon-table"
     />
   </div>
 
-  <div
+  <!-- <div
     class="onlycursor-pointer"
     title="Share {name}"
     on:click|stopPropagation={onShare}
   >
     <CloudUpload
-      class="w-4 h-4 text-white transform transition-all duration-100 hover:scale-110 "
+      class="icon-table"
     />
-  </div>
+  </div> -->
 </div>

@@ -1,25 +1,36 @@
 <script lang="ts">
-  import { Button, FullLogo, AllowListCaptcha } from 'components';
-  import { createOrbit } from 'src/store';
-  import { captcha } from 'src/captcha';
-  import type { Captcha } from 'src/captcha';
+  import { Button } from 'components';
+  import { createOrbit, kepler } from 'src/store';
+  import { initWallet, walletData, remainingSessionKeysTime } from 'src/store';
 
   const handleCaptchaResult = async (token) => {
     console.log('handleCaptchaResult', token);
     await createOrbit(token);
   };
 
+  export let handleNextStep: (() => void) | null;
+
   const createNewOrbit = async () => {
       await createOrbit();
+      handleNextStep();
   };
 </script>
 
-<div class="flex flex-col items-center border-r py-9 lg:w-64 border-gray-650">
-  <FullLogo class="w-64 px-10" />
+<div class="wrapper-orbit">
+  {#if $walletData}
   <Button
-    class="mx-10 mt-10"
-    fluid
+    class="mx-auto"
     text="Create new orbit"
     onClick={createNewOrbit}
   />
+  <p class="text-drawer">Create your first Orbit to get started</p>
+  {:else}
+    <Button
+      class="mx-auto"
+      disabled
+      text="Create new orbit"
+      onClick={createNewOrbit}
+    />
+    <p class="text-drawer">Connect your wallet before create your first Orbit</p>
+  {/if}
 </div>

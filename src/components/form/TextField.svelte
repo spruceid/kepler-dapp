@@ -10,10 +10,10 @@
   export let onInput: (event) => void;
 </script>
 
-<div class="relative h-16">
+<div class="relative h-12 w-full">
   {#if icon}
     <label
-      class="absolute flex flex-row items-center justify-center w-12 h-16"
+      class="absolute flex flex-row items-center justify-center w-10 h-12"
       for={name}
     >
       <svelte:component this={icon} class="w-4 h-4" />
@@ -21,7 +21,7 @@
   {/if}
   <input
     on:input={onInput}
-    class="py-4 h-16 pl-12 pr-6 bg-transparent border-2 border-gray-700 rounded-md {clazz}"
+    class="py-2 h-12 pl-12 pr-2 w-full bg-transparent border-1 border-green rounded-md {clazz}"
     type="text"
     id={name}
     {name}

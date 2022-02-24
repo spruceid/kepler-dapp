@@ -9,14 +9,14 @@
 <div class="inline-flex flex-col justify-between ml-2">
   <span
     on:click={onSortAsc}
-    class="cursor-pointer transition-all duration-100 transform hover:scale-110"
+    class="sort-icon"
   >
-    <ArrowUp class="w-2 h-2 text-gray-500" />
+    <ArrowUp class="w-2 h-2 text-gray-1" />
   </span>
   <span
     on:click={onSortDesc}
-    class="cursor-pointer transition-all duration-100 transform hover:scale-110"
+    class="sort-icon"
   >
-    <ArrowDown class="w-2 h-2 text-gray-500" />
+    <ArrowDown class="w-2 h-2 text-gray-1" />
   </span>
 </div>
